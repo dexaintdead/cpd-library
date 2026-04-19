@@ -1,0 +1,2034 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CPD Blackbook — The Library</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════════════════
+   CPD LIBRARY — Knowledge Base + Document Host
+   ═══════════════════════════════════════════════════════════ */
+:root{
+  --bg:#0C0C0C;--bg2:#131313;--bg3:#1A1A1A;--bg4:#222;--bg5:#2A2A2A;
+  --bd:rgba(255,255,255,0.07);--bd2:rgba(255,255,255,0.12);--bd3:rgba(255,255,255,0.18);
+  --tx:#FFFFFF;--dim:#8A8698;--muted:#6A6678;
+  --red:#D63030;--red-lo:rgba(214,48,48,0.1);--red-b:rgba(214,48,48,0.22);
+  --gold:#C9A84C;--gold-lo:rgba(201,168,76,0.1);--gold-b:rgba(201,168,76,0.25);
+  --green:#2DBD78;--green-lo:rgba(45,189,120,0.1);--green-b:rgba(45,189,120,0.25);
+  --blue:#3478C8;--blue-lo:rgba(52,120,200,0.1);--blue-b:rgba(52,120,200,0.25);
+  --purple:#9B5DE5;--purple-lo:rgba(155,93,229,0.1);--purple-b:rgba(155,93,229,0.25);
+  --teal:#00C2B2;--teal-lo:rgba(0,194,178,0.1);--teal-b:rgba(0,194,178,0.25);
+  --orange:#F97316;--orange-lo:rgba(249,115,22,0.1);--orange-b:rgba(249,115,22,0.25);
+  --fd:'Bebas Neue',sans-serif;--fm:'JetBrains Mono',monospace;--fs:'Syne',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;background:var(--bg);color:var(--tx);font-family:var(--fs);overflow:hidden}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--bd3);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--dim)}
+button{cursor:pointer;border:none;background:none;font-family:var(--fs);color:inherit}
+input,textarea,select{font-family:var(--fs);color:var(--tx)}
+a{color:inherit;text-decoration:none}
+
+/* ── APP SHELL ── */
+.app{display:flex;flex-direction:column;height:100vh;overflow:hidden}
+
+/* ── TOPBAR ── */
+.topbar{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 22px;height:60px;background:var(--bg2);
+  border-bottom:1px solid var(--bd);flex-shrink:0;gap:16px;
+}
+.tb-left{display:flex;align-items:center;gap:14px;min-width:0}
+.tb-brand{font-family:var(--fd);font-size:22px;letter-spacing:.08em;color:var(--dim);white-space:nowrap}
+.tb-brand span{color:var(--red)}
+.tb-sep{width:1px;height:22px;background:var(--bd2)}
+.tb-title{font-family:var(--fd);font-size:22px;letter-spacing:.07em;white-space:nowrap}
+.tb-pill{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:14px;
+  background:var(--green-lo);border:1px solid var(--green-b);
+  font-family:var(--fm);font-size:11px;font-weight:700;letter-spacing:.12em;color:var(--green)}
+.tb-pill-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+.tb-right{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.tb-search-wrap{position:relative;flex:1;max-width:520px;min-width:0}
+.tb-search{
+  width:100%;height:38px;padding:0 14px 0 38px;border-radius:8px;
+  background:var(--bg3);border:1px solid var(--bd2);
+  font-family:var(--fm);font-size:14px;color:var(--tx);outline:none;transition:all .15s
+}
+.tb-search:focus{border-color:var(--gold-b);background:var(--bg4)}
+.tb-search::placeholder{color:var(--muted)}
+.tb-search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);
+  width:16px;height:16px;color:var(--muted);pointer-events:none}
+.tb-search-kbd{position:absolute;right:10px;top:50%;transform:translateY(-50%);
+  font-family:var(--fm);font-size:11px;color:var(--muted);padding:2px 6px;
+  border:1px solid var(--bd2);border-radius:4px;background:var(--bg);pointer-events:none}
+
+/* ── LAYOUT ── */
+.body{flex:1;display:flex;min-height:0;overflow:hidden}
+
+/* ── SIDEBAR ── */
+.sidebar{
+  width:280px;flex-shrink:0;background:var(--bg2);
+  border-right:1px solid var(--bd);display:flex;flex-direction:column;overflow:hidden
+}
+.sb-head{padding:18px 18px 14px;border-bottom:1px solid var(--bd)}
+.sb-eyebrow{font-family:var(--fm);font-size:11px;letter-spacing:.18em;color:var(--gold);margin-bottom:4px}
+.sb-headline{font-family:var(--fd);font-size:30px;letter-spacing:.05em;line-height:1}
+.sb-sub{font-family:var(--fm);font-size:12px;color:var(--dim);margin-top:6px;line-height:1.4}
+.sb-nav{flex:1;overflow-y:auto;padding:10px 8px}
+.sb-sec{font-family:var(--fm);font-size:11px;letter-spacing:.16em;color:var(--muted);
+  text-transform:uppercase;padding:10px 10px 6px}
+.sb-sec:first-child{padding-top:4px}
+.sb-item{
+  display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:6px;
+  font-size:14px;color:var(--dim);cursor:pointer;transition:all .12s;
+  border:1px solid transparent;width:100%;text-align:left
+}
+.sb-item:hover{background:var(--bg3);color:var(--tx)}
+.sb-item.active{background:var(--gold-lo);color:var(--tx);border-color:var(--gold-b)}
+.sb-item.active .sb-dot{background:var(--gold)}
+.sb-dot{width:6px;height:6px;border-radius:50%;background:var(--muted);flex-shrink:0}
+.sb-item-lbl{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sb-item-count{font-family:var(--fm);font-size:11px;color:var(--muted)}
+
+/* ── MAIN PANEL ── */
+.main{flex:1;overflow-y:auto;overflow-x:hidden;min-width:0}
+.main-inner{max-width:1100px;margin:0 auto;padding:28px 32px 60px}
+
+/* ── HERO (HOME) ── */
+.hero{
+  position:relative;padding:36px 32px;border-radius:14px;
+  background:linear-gradient(135deg,var(--bg2) 0%,var(--bg3) 100%);
+  border:1px solid var(--bd2);margin-bottom:24px;overflow:hidden
+}
+.hero::before{
+  content:'';position:absolute;top:-50%;right:-20%;width:60%;height:200%;
+  background:radial-gradient(circle,var(--gold-lo) 0%,transparent 60%);
+  pointer-events:none
+}
+.hero-eyebrow{font-family:var(--fm);font-size:11px;letter-spacing:.2em;color:var(--gold);margin-bottom:10px;position:relative}
+.hero-title{font-family:var(--fd);font-size:52px;letter-spacing:.04em;line-height:1;position:relative}
+.hero-title span{color:var(--red)}
+.hero-sub{font-size:16px;color:var(--dim);margin-top:12px;max-width:640px;line-height:1.55;position:relative}
+.hero-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:24px;position:relative}
+.hero-stat{background:rgba(0,0,0,.3);border:1px solid var(--bd);border-radius:8px;padding:12px 14px}
+.hero-stat-lbl{font-family:var(--fm);font-size:10px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase}
+.hero-stat-val{font-family:var(--fd);font-size:26px;letter-spacing:.04em;margin-top:4px}
+.hero-stat-val.gold{color:var(--gold)}
+.hero-stat-val.green{color:var(--green)}
+
+/* ── SECTION HEADERS ── */
+.sec{margin-bottom:32px}
+.sec-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;gap:12px}
+.sec-title{font-family:var(--fd);font-size:24px;letter-spacing:.06em}
+.sec-sub{font-size:13px;color:var(--dim);font-family:var(--fm)}
+
+/* ── TOOL CARDS GRID ── */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.card{
+  background:var(--bg2);border:1px solid var(--bd);border-radius:10px;
+  padding:16px;cursor:pointer;transition:all .15s;position:relative;overflow:hidden
+}
+.card:hover{border-color:var(--bd3);transform:translateY(-1px);background:var(--bg3)}
+.card-tag{
+  display:inline-block;font-family:var(--fm);font-size:10px;letter-spacing:.14em;
+  text-transform:uppercase;padding:2px 8px;border-radius:10px;margin-bottom:10px
+}
+.card-tag.core{background:var(--red-lo);color:var(--red);border:1px solid var(--red-b)}
+.card-tag.sales{background:var(--gold-lo);color:var(--gold);border:1px solid var(--gold-b)}
+.card-tag.intel{background:var(--blue-lo);color:var(--blue);border:1px solid var(--blue-b)}
+.card-tag.community{background:var(--purple-lo);color:var(--purple);border:1px solid var(--purple-b)}
+.card-tag.money{background:var(--green-lo);color:var(--green);border:1px solid var(--green-b)}
+.card-tag.specialist{background:var(--teal-lo);color:var(--teal);border:1px solid var(--teal-b)}
+.card-tag.admin{background:var(--orange-lo);color:var(--orange);border:1px solid var(--orange-b)}
+.card-title{font-family:var(--fd);font-size:22px;letter-spacing:.04em;line-height:1.05}
+.card-desc{font-size:13px;color:var(--dim);margin-top:8px;line-height:1.5}
+.card-foot{display:flex;align-items:center;justify-content:space-between;margin-top:12px;padding-top:10px;border-top:1px solid var(--bd)}
+.card-meta{font-family:var(--fm);font-size:11px;color:var(--muted);letter-spacing:.08em}
+.card-arrow{color:var(--gold);font-family:var(--fd);font-size:16px;letter-spacing:.1em}
+
+/* ── ARTICLE VIEW ── */
+.article{background:var(--bg2);border:1px solid var(--bd);border-radius:12px;overflow:hidden}
+.article-head{padding:28px 32px 24px;border-bottom:1px solid var(--bd);position:relative}
+.article-crumb{font-family:var(--fm);font-size:11px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;margin-bottom:10px}
+.article-crumb a{color:var(--gold);cursor:pointer}
+.article-crumb a:hover{color:var(--tx)}
+.article-title{font-family:var(--fd);font-size:44px;letter-spacing:.04em;line-height:1}
+.article-sub{font-size:15px;color:var(--dim);margin-top:10px;line-height:1.5;max-width:720px}
+.article-actions{display:flex;gap:8px;margin-top:18px;flex-wrap:wrap}
+.btn{
+  display:inline-flex;align-items:center;gap:8px;padding:9px 14px;border-radius:7px;
+  font-family:var(--fm);font-size:12px;font-weight:600;letter-spacing:.08em;
+  text-transform:uppercase;border:1px solid var(--bd2);color:var(--tx);
+  background:var(--bg3);transition:all .15s;cursor:pointer
+}
+.btn:hover{background:var(--bg4);border-color:var(--bd3)}
+.btn.prim{background:var(--red);border-color:var(--red);color:#fff}
+.btn.prim:hover{background:#b82626}
+.btn.gold{background:var(--gold-lo);border-color:var(--gold-b);color:var(--gold)}
+.btn.gold:hover{background:var(--gold);color:#000}
+.btn.green{background:var(--green-lo);border-color:var(--green-b);color:var(--green)}
+.btn.green:hover{background:var(--green);color:#000}
+.btn svg{width:13px;height:13px}
+
+.article-body{padding:28px 32px}
+.article-body h2{font-family:var(--fd);font-size:24px;letter-spacing:.05em;margin:26px 0 10px;color:var(--tx)}
+.article-body h2:first-child{margin-top:0}
+.article-body h3{font-family:var(--fd);font-size:18px;letter-spacing:.05em;margin:20px 0 8px;color:var(--gold)}
+.article-body p{color:#D5D0E0;line-height:1.7;margin-bottom:14px;font-size:15px}
+.article-body ul,.article-body ol{margin:8px 0 16px 22px;color:#D5D0E0;line-height:1.7;font-size:15px}
+.article-body li{margin-bottom:6px}
+.article-body li strong{color:var(--tx)}
+.article-body code{font-family:var(--fm);font-size:13px;background:var(--bg3);padding:2px 6px;border-radius:4px;color:var(--gold)}
+.article-body blockquote{border-left:3px solid var(--gold);padding:8px 16px;margin:14px 0;color:var(--dim);font-style:italic;background:var(--bg3);border-radius:0 6px 6px 0}
+.article-body .callout{
+  padding:16px 18px;margin:18px 0;border-radius:8px;
+  background:var(--bg3);border:1px solid var(--bd2);border-left:3px solid var(--gold)
+}
+.article-body .callout.scenario{border-left-color:var(--green);background:var(--green-lo)}
+.article-body .callout.scenario strong{color:var(--green)}
+.article-body .callout.warning{border-left-color:var(--orange);background:var(--orange-lo)}
+.article-body .callout.warning strong{color:var(--orange)}
+.article-body .callout-title{font-family:var(--fd);font-size:16px;letter-spacing:.04em;margin-bottom:6px;color:var(--tx)}
+
+/* ── REFERRAL LINK BOX ── */
+.reflink{
+  background:linear-gradient(135deg,var(--gold-lo) 0%,rgba(0,0,0,.3) 100%);
+  border:1px solid var(--gold-b);border-radius:12px;padding:22px;margin:24px 0
+}
+.reflink-eyebrow{font-family:var(--fm);font-size:11px;letter-spacing:.16em;color:var(--gold);margin-bottom:6px}
+.reflink-title{font-family:var(--fd);font-size:26px;letter-spacing:.05em;margin-bottom:8px}
+.reflink-sub{color:var(--dim);font-size:14px;line-height:1.5;margin-bottom:14px}
+.reflink-row{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap}
+.reflink-box{
+  flex:1;min-width:200px;background:var(--bg);border:1px solid var(--bd2);
+  border-radius:7px;padding:10px 14px;font-family:var(--fm);font-size:12px;
+  color:var(--gold);letter-spacing:.04em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap
+}
+.reflink-share{display:flex;gap:8px;flex-wrap:wrap}
+.reflink-share button{flex:1;min-width:120px}
+
+/* ── DOCS (UPLOADED / HOSTED FILES) ── */
+.doc-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:10px;margin-top:12px}
+.doc{
+  display:flex;align-items:center;gap:12px;padding:12px 14px;
+  background:var(--bg2);border:1px solid var(--bd);border-radius:8px;transition:all .15s
+}
+.doc:hover{border-color:var(--bd3);background:var(--bg3)}
+.doc-ico{width:38px;height:44px;border-radius:5px;display:flex;align-items:center;justify-content:center;
+  font-family:var(--fd);font-size:11px;letter-spacing:.04em;flex-shrink:0;color:#fff}
+.doc-ico.pdf{background:var(--red)}
+.doc-ico.doc{background:var(--blue)}
+.doc-ico.xls{background:var(--green)}
+.doc-ico.ppt{background:var(--orange)}
+.doc-ico.md{background:var(--gold);color:#000}
+.doc-ico.txt{background:var(--muted)}
+.doc-ico.img{background:var(--purple)}
+.doc-main{flex:1;min-width:0}
+.doc-name{font-size:14px;font-weight:600;color:var(--tx);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.doc-meta{font-family:var(--fm);font-size:11px;color:var(--muted);margin-top:3px}
+.doc-acts{display:flex;gap:4px;flex-shrink:0}
+.doc-act{
+  width:30px;height:30px;border-radius:5px;background:var(--bg3);border:1px solid var(--bd2);
+  display:flex;align-items:center;justify-content:center;color:var(--dim);transition:all .12s
+}
+.doc-act:hover{background:var(--bg4);color:var(--tx);border-color:var(--bd3)}
+.doc-act svg{width:14px;height:14px}
+
+/* ── SEARCH RESULTS ── */
+.search-results{display:flex;flex-direction:column;gap:8px}
+.search-result{
+  padding:14px 16px;background:var(--bg2);border:1px solid var(--bd);border-radius:8px;
+  cursor:pointer;transition:all .15s
+}
+.search-result:hover{border-color:var(--gold-b);background:var(--bg3)}
+.search-result-kind{font-family:var(--fm);font-size:10px;letter-spacing:.14em;color:var(--gold);text-transform:uppercase;margin-bottom:4px}
+.search-result-title{font-family:var(--fd);font-size:20px;letter-spacing:.04em;margin-bottom:4px}
+.search-result-snippet{font-size:13px;color:var(--dim);line-height:1.5}
+.search-result-snippet mark{background:var(--gold-lo);color:var(--gold);padding:0 2px;border-radius:3px}
+.search-empty{text-align:center;padding:60px 20px;color:var(--dim)}
+.search-empty-ico{font-family:var(--fd);font-size:60px;color:var(--bd3);margin-bottom:14px}
+
+/* ── TOAST ── */
+.toast{
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(100px);
+  padding:12px 20px;background:var(--bg3);border:1px solid var(--bd3);border-radius:8px;
+  font-family:var(--fm);font-size:13px;color:var(--tx);z-index:9999;
+  box-shadow:0 8px 24px rgba(0,0,0,.4);transition:transform .3s ease-out;pointer-events:none
+}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.toast.green{border-color:var(--green-b);color:var(--green)}
+
+/* ── MOBILE ── */
+@media(max-width:900px){
+  .sidebar{position:absolute;left:-100%;top:60px;height:calc(100vh - 60px);z-index:50;transition:left .25s}
+  .sidebar.open{left:0}
+  .tb-search-wrap{max-width:none}
+  .hero-title{font-size:38px}
+  .hero-stats{grid-template-columns:repeat(2,1fr)}
+  .main-inner{padding:20px 16px 40px}
+  .article-head,.article-body{padding:22px 20px}
+  .article-title{font-size:32px}
+  .tb-menu-btn{display:flex!important}
+}
+.tb-menu-btn{display:none;width:38px;height:38px;align-items:center;justify-content:center;
+  border-radius:7px;background:var(--bg3);border:1px solid var(--bd2);color:var(--tx)}
+.tb-menu-btn svg{width:18px;height:18px}
+
+/* ── STATE TOGGLES ── */
+.view{display:none}
+.view.active{display:block}
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ═══ TOPBAR ═══ -->
+  <header class="topbar">
+    <div class="tb-left">
+      <button class="tb-menu-btn" onclick="toggleSidebar()" aria-label="Menu">
+        <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 5h14M2 9h14M2 13h14"/></svg>
+      </button>
+      <div class="tb-brand">CPD<span>.</span></div>
+      <div class="tb-sep"></div>
+      <div class="tb-title">THE LIBRARY</div>
+      <div class="tb-pill"><span class="tb-pill-dot"></span>LIVE</div>
+    </div>
+    <div class="tb-search-wrap">
+      <svg class="tb-search-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="7" cy="7" r="5"/><path d="M11 11l4 4"/></svg>
+      <input id="gsearch" class="tb-search" type="text" placeholder="Search tools, guides, scenarios, documents..." autocomplete="off">
+      <span class="tb-search-kbd">/</span>
+    </div>
+    <div class="tb-right" id="tb-right">
+      <!-- populated by JS -->
+    </div>
+  </header>
+
+  <!-- ═══ BODY ═══ -->
+  <div class="body">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sb-head">
+        <div class="sb-eyebrow">◆ KNOWLEDGE BASE</div>
+        <div class="sb-headline">LIBRARY</div>
+        <div class="sb-sub">Everything about every tool. Share it. Print it. Earn from it.</div>
+      </div>
+      <nav class="sb-nav" id="sb-nav">
+        <!-- populated by JS -->
+      </nav>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main" id="main">
+      <div class="main-inner">
+
+        <!-- HOME VIEW -->
+        <div class="view active" id="view-home"></div>
+
+        <!-- CATEGORY VIEW -->
+        <div class="view" id="view-category"></div>
+
+        <!-- ARTICLE VIEW -->
+        <div class="view" id="view-article"></div>
+
+        <!-- DOCS VIEW -->
+        <div class="view" id="view-docs"></div>
+
+        <!-- SEARCH VIEW -->
+        <div class="view" id="view-search"></div>
+
+      </div>
+    </main>
+  </div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script>
+/* ════════════════════════════════════════════════════════════════
+   CPD LIBRARY — data + logic
+   ════════════════════════════════════════════════════════════════ */
+
+var CF_WORKER     = 'https://cpd-api.dex-fe2.workers.dev';
+var LW_BASE_URL   = 'https://cpdblackbook.com/lifeworkos';
+var FF_BASE_URL   = 'https://cpdblackbook.com/fit-finder';
+var LIB_BASE_URL  = 'https://cpdblackbook.com/library';
+
+var MEMBER_ID   = '';
+var MEMBER_NAME = '';
+var MEMBER_PLAN = '';
+
+/* Listen for member identity pushed from the parent dashboard */
+window.addEventListener('message', function(e){
+  if(!e || !e.data) return;
+  var d = e.data;
+  if(d.member_id || d.memberId){
+    MEMBER_ID   = d.member_id || d.memberId || MEMBER_ID;
+    MEMBER_NAME = d.memberName || d.member_name || MEMBER_NAME;
+    MEMBER_PLAN = d.plan || MEMBER_PLAN;
+    refreshRefLinks();
+  }
+});
+
+/* Allow ?member_id=... direct query */
+(function(){
+  var p = new URLSearchParams(location.search);
+  MEMBER_ID   = p.get('member_id') || MEMBER_ID;
+  MEMBER_NAME = p.get('member_name') || MEMBER_NAME;
+  MEMBER_PLAN = p.get('plan') || MEMBER_PLAN;
+})();
+
+function cpdAuthHeaders(){
+  var h = { 'Content-Type':'application/json' };
+  if(MEMBER_ID) h['X-Member-Id'] = MEMBER_ID;
+  return h;
+}
+
+function toast(msg, kind){
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + (kind||'');
+  clearTimeout(t._tmr);
+  t._tmr = setTimeout(function(){ t.className = 'toast ' + (kind||''); }, 2400);
+}
+
+function silentCopy(text, cb){
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(function(){ if(cb)cb(); }).catch(function(){ fallbackCopy(text,cb); });
+  } else { fallbackCopy(text,cb); }
+}
+function fallbackCopy(text, cb){
+  var ta=document.createElement('textarea'); ta.value=text; ta.style.position='fixed';ta.style.opacity='0';
+  document.body.appendChild(ta); ta.focus(); ta.select();
+  try{ document.execCommand('copy'); }catch(e){}
+  document.body.removeChild(ta);
+  if(cb) cb();
+}
+
+/* Build a tracked referral link for any destination */
+function buildRefLink(baseUrl){
+  if(!MEMBER_ID) return baseUrl;
+  var u = baseUrl + '?ref=' + encodeURIComponent(MEMBER_ID);
+  if(MEMBER_NAME) u += '&ref_name=' + encodeURIComponent(MEMBER_NAME);
+  return u;
+}
+
+function trackLinkShare(source){
+  if(!MEMBER_ID) return;
+  try{
+    fetch(CF_WORKER + '/track-link-share', {
+      method:'POST', headers:cpdAuthHeaders(),
+      body: JSON.stringify({
+        member_id: MEMBER_ID, member_name: MEMBER_NAME || '', source: source || 'library'
+      })
+    }).catch(function(){});
+  }catch(e){}
+}
+
+/* Re-render any visible ref-link boxes when member identity changes */
+function refreshRefLinks(){
+  document.querySelectorAll('[data-reflink]').forEach(function(el){
+    var base = el.getAttribute('data-reflink');
+    el.textContent = buildRefLink(base);
+  });
+}
+
+/* ════════════════════════════════════════════════════════════════
+   CATEGORIES + TOOL DATA
+   ════════════════════════════════════════════════════════════════ */
+
+var CATEGORIES = [
+  { id:'getting-started', label:'Getting Started', tag:'core',       desc:'How the platform works, the shared brain, the one wallet.' },
+  { id:'money',           label:'Money & Growth',  tag:'money',      desc:'Bank, earnings, referrals, team, credits.' },
+  { id:'sales',           label:'Sales & Deals',   tag:'sales',      desc:'Pipeline, fact-finding, campaigns, agency PM.' },
+  { id:'intel',           label:'Intelligence',    tag:'intel',      desc:'Brand intel, culture scanner, markets, sports, realty.' },
+  { id:'community',       label:'Community',       tag:'community',  desc:'Directory, forum, inbox, classifieds, blog.' },
+  { id:'specialist',      label:'Specialist Suites',tag:'specialist',desc:'A&R, Creator, Deal Room, Content Studio, Exec Prospector.' },
+  { id:'admin',           label:'Admin & Ops',     tag:'admin',      desc:'Rep suite, admin console, profile, reports.' },
+  { id:'scenarios',       label:'Scenarios',       tag:'core',       desc:'Real plays: prospects, clients, reps, users.' },
+  { id:'referrals',       label:'Referral Links',  tag:'money',      desc:'Every shareable link, built with your ID.' },
+  { id:'docs',            label:'Documents',       tag:'core',       desc:'Hosted files — print, download, share.' }
+];
+
+/* ── TOOLS DATA ── Every tool in the ecosystem */
+var TOOLS = [
+  // ── CORE / GETTING STARTED ──
+  { id:'architecture', cat:'getting-started', tag:'core', title:'How LifeWork OS Works',
+    desc:'The three-layer architecture — Surface, Gatekeeper, Vault. One contact graph. One wallet. One message bus.',
+    page:'architecture' },
+  { id:'dashboard', cat:'getting-started', tag:'core', title:'The Dashboard',
+    desc:'Your home base. Daily Command Brief, quick actions, credit meter, every tool one click away.',
+    page:'tool' },
+  { id:'credit-economy', cat:'getting-started', tag:'core', title:'The Credit Economy',
+    desc:'One wallet across every AI action in every tool. How credits are earned, spent, topped up.',
+    page:'tool' },
+  { id:'plans', cat:'getting-started', tag:'core', title:'Plans & Pricing',
+    desc:'Network Member (free) through Enterprise ($5k/mo). What you get at every tier.',
+    page:'plans' },
+
+  // ── MONEY & GROWTH ──
+  { id:'bank', cat:'money', tag:'money', title:'The Bank',
+    desc:'Your earnings ledger. Commissions, milestones, payouts, lifetime totals — live.',
+    page:'tool' },
+  { id:'earnings', cat:'money', tag:'money', title:'Earnings Dashboard',
+    desc:'Real-time commission tracking. See every referral payment as it happens.',
+    page:'tool' },
+  { id:'credit-menu', cat:'money', tag:'money', title:'Credit Menu',
+    desc:'Buy credit packs. Top up your AI balance. See your consumption by tool.',
+    page:'tool' },
+  { id:'referrals', cat:'money', tag:'money', title:'Referral Tracker',
+    desc:'Every link click, lead captured, conversion, and recurring commission — in one view.',
+    page:'tool' },
+  { id:'team', cat:'money', tag:'money', title:'My Team',
+    desc:'Your downline. Reps you\'ve onboarded, their production, their MRR you earn on.',
+    page:'tool' },
+
+  // ── SALES & DEALS ──
+  { id:'catalog', cat:'sales', tag:'sales', title:'Product Catalog',
+    desc:'The canonical product/plan menu. Shareable with prospects. Every plan spec, every credit allowance, every commission rate.',
+    page:'tool' },
+  { id:'pipeline', cat:'sales', tag:'sales', title:'Pipeline / CRM',
+    desc:'Kanban-style deal board. Drag stages, auto-log activity, enrich contacts with Fact Finder.',
+    page:'tool' },
+  { id:'factfinder', cat:'sales', tag:'sales', title:'Fact Finder',
+    desc:'AI-powered people intel. Paste a name, get context: role, reach, rep, recent moves. Dual-writes to contact graph.',
+    page:'tool' },
+  { id:'agency', cat:'sales', tag:'sales', title:'Agency PM',
+    desc:'Project management for client work. Projects, tasks, deliverables, co-editors, all pinned to reports.',
+    page:'tool' },
+  { id:'reports-drive', cat:'sales', tag:'sales', title:'Reports Drive',
+    desc:'Every AI-generated report ever, in one searchable place. Share, attach, co-edit, print.',
+    page:'tool' },
+  { id:'campaign-cal', cat:'sales', tag:'sales', title:'Campaign Calendar',
+    desc:'Unified schedule for posts, pitches, send-outs. Drag, reschedule, auto-syncs to Content Studio.',
+    page:'tool' },
+  { id:'campaign-attack', cat:'sales', tag:'sales', title:'Campaign Attack',
+    desc:'One-prompt campaign generator. Brief goes in, full deployment plan comes out — angles, copy, channels, schedule.',
+    page:'tool' },
+  { id:'deal-room', cat:'sales', tag:'sales', title:'Deal Room',
+    desc:'AI proposal builder. Terms, pricing, scope, branded PDFs. Updates Pipeline stage on save.',
+    page:'tool' },
+
+  // ── INTELLIGENCE ──
+  { id:'brand-intel', cat:'intel', tag:'intel', title:'Brand Intel',
+    desc:'Live brand score cards. Score, momentum, sentiment, partnerships, category — refreshed daily.',
+    page:'tool' },
+  { id:'culture-scanner', cat:'intel', tag:'intel', title:'Culture Scanner',
+    desc:'Signal feed for what\'s popping — music, fashion, sports, tech. Beat news cycles by hours.',
+    page:'tool' },
+  { id:'blackbook', cat:'intel', tag:'intel', title:'The Blackbook (Kalshi)',
+    desc:'Prediction-market intelligence terminal. Live prices on event contracts. Find edge.',
+    page:'tool' },
+  { id:'market', cat:'intel', tag:'intel', title:'Market Command',
+    desc:'Crypto + equities trading terminal. Watchlists, charts, news, alerts. All in one screen.',
+    page:'tool' },
+  { id:'realty', cat:'intel', tag:'intel', title:'Realty Command',
+    desc:'Real estate intelligence. Comps, market heat, listing lab, investor analytics.',
+    page:'tool' },
+  { id:'sports-brief', cat:'intel', tag:'intel', title:'Sports Brief',
+    desc:'Daily sports slate. Lines, narratives, injury notes — the slate in one briefing.',
+    page:'tool' },
+  { id:'drive', cat:'intel', tag:'intel', title:'CPD Drive',
+    desc:'Your working filesystem. Upload anything. Tag. Share. Attach to anything in the platform.',
+    page:'tool' },
+  { id:'intelligence-board', cat:'intel', tag:'intel', title:'Intelligence Board',
+    desc:'Operator-view command center. Every signal, every score, every watchlist on one wall.',
+    page:'tool' },
+  { id:'tv', cat:'intel', tag:'intel', title:'CPD TV',
+    desc:'Curated video briefings. Culture, markets, sports — 60-second updates.',
+    page:'tool' },
+
+  // ── COMMUNITY ──
+  { id:'profile', cat:'community', tag:'community', title:'My Profile',
+    desc:'Your public face in the network. Bio, links, specialties, deals closed, badges.',
+    page:'tool' },
+  { id:'inbox', cat:'community', tag:'community', title:'Inbox',
+    desc:'Member-to-member messaging. Share reports, threads, deals. Real-time via the bus.',
+    page:'tool' },
+  { id:'directory', cat:'community', tag:'community', title:'Member Directory',
+    desc:'Every member, searchable. Filter by role, city, specialty. Members CRM for your own notes on them.',
+    page:'tool' },
+  { id:'forum', cat:'community', tag:'community', title:'Forum',
+    desc:'Topic threads. Ask questions, drop wins, coordinate plays.',
+    page:'tool' },
+  { id:'plug', cat:'community', tag:'community', title:'The Plug',
+    desc:'Live classified feed. Gigs, collabs, assets, introductions. Posts expire — move fast.',
+    page:'tool' },
+  { id:'classifieds', cat:'community', tag:'community', title:'Classifieds Board',
+    desc:'Persistent for-sale / for-hire board. Sorted, searchable.',
+    page:'tool' },
+  { id:'blog', cat:'community', tag:'community', title:'Member Blog',
+    desc:'Long-form posts from members. Case studies, teardowns, op-eds.',
+    page:'tool' },
+  { id:'skool', cat:'community', tag:'community', title:'Skool Community',
+    desc:'Structured courses + cohort discussion. Members-only curriculum.',
+    page:'tool' },
+
+  // ── SPECIALIST SUITES ──
+  { id:'anr-suite', cat:'specialist', tag:'specialist', title:'A&R Suite',
+    desc:'Artist Deep Intel, roster analytics, release planning. For the music side of the business.',
+    page:'tool' },
+  { id:'creator-command', cat:'specialist', tag:'specialist', title:'Creator Command',
+    desc:'Creator operating system. Brand deals pipeline, audience signals, content plan, rate card.',
+    page:'tool' },
+  { id:'exec-suite', cat:'specialist', tag:'specialist', title:'Exec Prospector',
+    desc:'Decision-maker finder. Role + company + verified context. Send-to-Pipeline in one click.',
+    page:'tool' },
+  { id:'content-studio', cat:'specialist', tag:'specialist', title:'Content Studio',
+    desc:'Write, schedule, and rotate posts across channels. AI captions in your voice.',
+    page:'tool' },
+  { id:'rep-suite', cat:'specialist', tag:'specialist', title:'Rep Suite',
+    desc:'Field Command Center. For reps managing territory, accounts, production, field visits.',
+    page:'tool' },
+  { id:'rep-suite-admin', cat:'specialist', tag:'specialist', title:'Rep Suite Admin',
+    desc:'Manager view. Rep performance, team production, onboarding, scorecards.',
+    page:'tool' },
+  { id:'client-apps', cat:'specialist', tag:'specialist', title:'Client Apps',
+    desc:'White-labeled mini-apps you can send clients. Interactive, branded, shareable.',
+    page:'tool' },
+
+  // ── ADMIN ──
+  { id:'admin-console', cat:'admin', tag:'admin', title:'Admin Console',
+    desc:'Platform-owner command center. Member roster, plan changes, activity log, overrides.',
+    page:'tool' },
+  { id:'reports', cat:'admin', tag:'admin', title:'Reports (Admin)',
+    desc:'Cross-member reporting. Roll-ups, exports, CSV pulls.',
+    page:'tool' },
+  { id:'earnings-admin', cat:'admin', tag:'admin', title:'Earnings Ledger',
+    desc:'Admin view of every commission owed, paid, pending, across the org.',
+    page:'tool' }
+];
+
+/* ── DETAILED ARTICLE CONTENT ──
+   Stored separately so search can scan titles/desc without pulling full bodies.
+*/
+var ARTICLES = {
+
+  // ═════ GETTING STARTED ═════
+  'architecture': {
+    crumb:'Getting Started › Architecture',
+    body: '\
+<h2>The Problem</h2>\
+<p>Most platforms are honest about being one thing. A CRM is a CRM. A content tool is a content tool. A trading terminal is a trading terminal. But your life isn\'t one thing — you\'re pitching a brand in the morning, writing a listing in the afternoon, approving a post at dinner, and checking a prediction market before bed. Every switch is a tax.</p>\
+<p>LifeWork OS removes that tax. Not with one bloated super-app — by engineering <strong>a connected system where every tool is a specialist and every specialist shares one brain.</strong></p>\
+<h2>The Three Layers</h2>\
+<h3>Layer One — The Surface</h3>\
+<p>The part you touch: dashboard, tools, reports, charts, calendar, chat. Dozens of purpose-built workspaces. <strong>The critical rule: the surface can read the world but cannot change it.</strong> Anything in your browser is visible to anyone with a developer console, so the browser never writes to the database directly.</p>\
+<h3>Layer Two — The Gatekeeper</h3>\
+<p>A Cloudflare Worker at the edge. It holds the only master key. It verifies identity, confirms ownership, meters credits, applies business rules, writes the change, returns. Every AI call also passes through here, so AI keys are never exposed.</p>\
+<h3>Layer Three — The Vault</h3>\
+<p>Source of truth. ~90 tables organized by domain: Identity, Money, Reports, Agency, Content, CRM, Messaging, Commerce, Intelligence, Rep Ops. <strong>Every table locked by row-level security — the database itself refuses writes the Gatekeeper didn\'t authorize.</strong></p>\
+<h2>The Shared Brain</h2>\
+<h3>One Contact Graph</h3>\
+<p>Every person you encounter — Exec Prospector, Pipeline import, community DM, typed manually — becomes one node. Fact Finder can show every report that references them, every campaign, every deal, every message.</p>\
+<h3>One Reports Drive</h3>\
+<p>Every AI report from every tool dual-writes: lands in the tool that made it, and lands in the canonical Reports Drive. Anything you generate is instantly findable, shareable, attachable, co-editable.</p>\
+<h3>One Wallet</h3>\
+<p>One credit balance across every tool. Gatekeeper deducts <em>before</em> running the AI call. If you don\'t have the credits, the action never fires. If it fires, the deduction is already logged.</p>\
+<h3>One Message Bus</h3>\
+<p>Every workspace talks to every other via an internal event bus. Content Studio schedules a post → Campaign Calendar refreshes. Deal Room saves a proposal → Pipeline updates stage. Share a report in chat → recipient\'s Inbox pings in real time.</p>\
+<div class="callout scenario"><div class="callout-title">Scenario: A Single Click</div>\
+<p>You\'re on an exec\'s profile in Exec Prospector. You hit "Send to Pipeline." In the next 400ms: Exec Prospector publishes an event → Pipeline and Fact Finder listen → Gatekeeper verifies identity, ownership, shape, whitelist → writes to Pipeline table → writes to contacts table → returns success → Pipeline board refreshes, Dashboard flashes toast, Fact Finder queues enrichment. One click. Six coordinated actions. Zero risk of partial state.</p></div>\
+<h2>The Daily Cycle</h2>\
+<p>Every morning: Daily Command Brief regenerates. Culture signals, market heat, sports slate, pipelines, brand movement. First member of the day triggers generation; everyone after sees the cached version instantly.</p>\
+<h2>The Safety Net</h2>\
+<ul><li><strong>Nothing sensitive in your browser.</strong> Master keys, AI keys, payment keys — live behind the Gatekeeper. Pop dev tools and you\'ll find read-only public keys, nothing else.</li>\
+<li><strong>The vault refuses unexpected writes.</strong> Row-level rules enforced by the database, not by hoping the app remembers.</li>\
+<li><strong>Gatekeeper whitelists every action.</strong> No generic "write anywhere" endpoint. Attackers can\'t invent new actions.</li>\
+<li><strong>Ownership validated on every write.</strong> You only modify what you own. The Gatekeeper verifies against the vault — not the browser\'s word for it.</li>\
+<li><strong>Audit logs flow continuously.</strong> Every sale, referral, credit transaction, admin action, invitation — logged and traceable.</li></ul>\
+<p class="muted"><em>This is the architecture we\'d expect if we were the customer. So it\'s the architecture we built.</em></p>'
+  },
+
+  'dashboard': {
+    crumb:'Getting Started › Dashboard',
+    body: '\
+<h2>What It Is</h2>\
+<p>The home base. Every time you open the platform, you land here. The sidebar shows every tool you have access to, grouped by section: Account, My Tools, Intelligence. The top bar shows Community modules and your live credit meter.</p>\
+<h2>What\'s On It</h2>\
+<h3>The Daily Command Brief</h3>\
+<p>Top of the page. Regenerates every morning — culture signals, market heat, sports slate, active pipeline highlights, brand movement. First member to load the dashboard each day triggers generation; subsequent loads are cached and instant.</p>\
+<h3>Quick Stats</h3>\
+<p>Credits remaining, active deals, unread messages, referrals this month, earnings MTD. Pulled from the Gatekeeper in real time.</p>\
+<h3>The Sidebar Navigation</h3>\
+<ul><li><strong>Account:</strong> Overview, Bank, Credit Menu, Referrals, My Team</li>\
+<li><strong>My Tools:</strong> Catalog, Pipeline, Fact Finder, Agency PM, Reports Drive, Campaign Calendar, <strong>Library</strong></li>\
+<li><strong>Intelligence:</strong> Client Apps, Campaign Attack, Brand Intel, Culture Scanner, Blackbook, Market Command, Realty Command, Sports Brief, CPD Drive</li></ul>\
+<h3>The Community Bar</h3>\
+<p>Horizontal bar below the top: Profile, Inbox, Directory, Forum, The Plug, Classifieds, Blog, Skool. Always one click away.</p>\
+<div class="callout"><div class="callout-title">Pro Move</div><p>The credit meter in the top-right is clickable — goes straight to Credit Menu for top-ups. Never run dry mid-campaign.</p></div>\
+<h2>Who Uses It</h2>\
+<p><strong>Everyone.</strong> From a Network Member checking community to an Enterprise account running a 20-person sales org, the dashboard is the entry point.</p>'
+  },
+
+  'credit-economy': {
+    crumb:'Getting Started › Credit Economy',
+    body: '\
+<h2>One Wallet. Every Tool.</h2>\
+<p>Every AI action across every tool draws from one credit balance. There\'s no separate pool for Fact Finder vs. Campaign Attack vs. Listing Lab. Your plan gives you a monthly allowance; credit packs top you up; milestone bonuses grant extra.</p>\
+<h2>How Credits Are Spent</h2>\
+<ul><li><strong>Fact Finder lookup:</strong> varies by depth</li>\
+<li><strong>Campaign Attack generation:</strong> per brief</li>\
+<li><strong>Brand Intel deep scan:</strong> per target</li>\
+<li><strong>Artist Deep Intel (A&R):</strong> per artist</li>\
+<li><strong>Listing Lab (Realty):</strong> per listing</li>\
+<li><strong>Deal Room proposal:</strong> per document</li>\
+<li><strong>Content Studio caption generation:</strong> per batch</li></ul>\
+<p>Exact credit costs are shown on each button <em>before</em> you click. No surprises.</p>\
+<h2>How Credits Are Earned / Added</h2>\
+<ul><li><strong>Monthly allowance</strong> — resets on your billing date. See the allowance for your plan in the Plans article.</li>\
+<li><strong>Credit packs</strong> — buy extra anytime from the Credit Menu.</li>\
+<li><strong>Milestone bonuses</strong> — automatic grants at key achievements (first referral, first deal closed, first report shared, etc.)</li>\
+<li><strong>Referral rewards</strong> — certain plan upgrades earn you a credit bump.</li></ul>\
+<h2>The Gatekeeper Protection</h2>\
+<p>When you click a button that costs 3 credits, the Gatekeeper deducts 3 credits <strong>before</strong> running the AI call. If you don\'t have 3, the action never happens. If it happens, the deduction is already logged. <strong>Impossible</strong> to run a billable action without paying; <strong>impossible</strong> to be charged for an action that didn\'t run.</p>\
+<div class="callout warning"><div class="callout-title">Heads Up</div><p>If you hit zero and try to run a premium action, you\'ll see a Credit Menu prompt instead. Your data stays; you just need to top up.</p></div>'
+  },
+
+  'plans': {
+    crumb:'Getting Started › Plans & Pricing',
+    body: '\
+<h2>Seven Tiers</h2>\
+<p>From free community access to full enterprise. Commissions are <strong>recurring</strong> — as long as your referral stays subscribed, you earn every month.</p>\
+<h3>◆ Network Member — Free</h3>\
+<p>Community, classifieds, culture drive, directory. 0 AI credits. Referrals earn $0.</p>\
+<h3>★ Intro Member — $50/mo</h3>\
+<p>20 AI credits/mo. Light access to core tools. <strong>Referrals pay $20/mo recurring</strong> (40%).</p>\
+<h3>★ Personal Pro — $50/mo</h3>\
+<p>100 AI credits/mo. Full AI suite. Built for solo operators. <strong>$20/mo recurring per referral.</strong></p>\
+<h3>★★ Full Member — $100/mo</h3>\
+<p>200 AI credits/mo. Full member access, all tools. <strong>$40/mo recurring per referral.</strong></p>\
+<h3>▲ Business Member — $250/mo</h3>\
+<p>600 AI credits/mo. Team-level access, Agency PM, multi-seat. <strong>$100/mo recurring per referral.</strong></p>\
+<h3>▲ Biz Plus — $500/mo</h3>\
+<p>1,500 AI credits/mo. Agency-scale. Rep Suite Admin. <strong>$200/mo recurring per referral.</strong></p>\
+<h3>⬡ Business Enterprise — $5,000/mo</h3>\
+<p>Unlimited AI credits. Full platform, white-label options, custom integrations. <strong>$750/mo recurring per referral</strong> (15%).</p>\
+<h2>How Commission Payments Work</h2>\
+<p>You earn the percentage on the first payment <em>and every renewal after</em>. If someone you referred stays on Full Member for 18 months, you\'ve earned $40 × 18 = $720 on that one referral. Payments are tracked live in The Bank.</p>\
+<div class="callout scenario"><div class="callout-title">Scenario: Stack it up</div><p>Refer 10 Full Members over 6 months. All stay. You\'re earning $40 × 10 = $400/mo recurring, pure margin, for as long as they\'re subscribed. Send them the Fit Finder link or the LifeWork OS page with your ID attached — the system does the rest.</p></div>'
+  },
+
+  // ═════ MONEY ═════
+  'bank': {
+    crumb:'Money & Growth › The Bank',
+    body: '\
+<h2>What It Is</h2>\
+<p>Your earnings ledger. Every commission, every milestone bonus, every payout — timestamped, itemized, searchable.</p>\
+<h2>What You See</h2>\
+<ul><li><strong>Lifetime earnings</strong> — total commission ever generated</li>\
+<li><strong>This month</strong> — MTD commission, pending vs. cleared</li>\
+<li><strong>Active MRR</strong> — the sum of all currently-subscribed referrals you earn on</li>\
+<li><strong>Transaction feed</strong> — every payment as it posts</li>\
+<li><strong>Payout history</strong> — when funds moved to your connected account</li></ul>\
+<h2>How To Use It</h2>\
+<p>Check it weekly to spot: churn (referral dropped), upgrades (bigger commission), milestones hit. Export CSV for your own books.</p>\
+<div class="callout scenario"><div class="callout-title">Scenario: Rep checking the board</div><p>Monday morning. Open The Bank. See that two of your Full Member referrals upgraded to Business Member over the weekend. Your MRR on those two just jumped from $80/mo to $200/mo — a $120 bump for zero extra work. This is why recurring commissions compound.</p></div>'
+  },
+
+  'earnings': {
+    crumb:'Money & Growth › Earnings Dashboard',
+    body: '\
+<h2>What It Is</h2>\
+<p>Live commission tracking. Whereas The Bank is your long-term ledger, Earnings is the real-time feed: every payment hitting your account as it happens.</p>\
+<h2>Signals To Watch</h2>\
+<ul><li>Commission confirmation within seconds of a referral\'s payment clearing</li>\
+<li>Renewal notifications each month</li>\
+<li>Milestone alerts (first $1k earned, first $10k earned, etc.)</li></ul>\
+<h2>Connecting To The Bank</h2>\
+<p>Every row in Earnings is a line item in The Bank. Earnings is the "what just happened" view; The Bank is the "what do I have" view. Use both.</p>'
+  },
+
+  'credit-menu': {
+    crumb:'Money & Growth › Credit Menu',
+    body: '\
+<h2>What It Is</h2>\
+<p>Your credit wallet UI. See what you have, buy more, watch consumption.</p>\
+<h2>What You Can Do</h2>\
+<ul><li><strong>Balance check</strong> — credits remaining in current billing cycle</li>\
+<li><strong>Allowance info</strong> — monthly grant based on your plan</li>\
+<li><strong>Credit packs</strong> — buy 100, 500, or 2,500-pack top-ups anytime</li>\
+<li><strong>Usage breakdown</strong> — which tools consumed what, this cycle</li>\
+<li><strong>Reset date</strong> — when your next monthly allowance hits</li></ul>\
+<div class="callout"><div class="callout-title">Pro Move</div><p>Running a big campaign week? Buy the pack <em>before</em> you start, not when you\'re already out and blocked. The platform doesn\'t roll unused credits forever — it resets monthly, so don\'t hoard.</p></div>'
+  },
+
+  'referrals': {
+    crumb:'Money & Growth › Referral Tracker',
+    body: '\
+<h2>What It Is</h2>\
+<p>Your referral operations center. Every link you\'ve ever shared, every click, every lead captured, every conversion, every dollar — in one view.</p>\
+<h2>The Two Main Links</h2>\
+<h3>Fit Finder link</h3>\
+<p><code>cpdblackbook.com/fit-finder?ref=YOUR_ID</code></p>\
+<p>Best for cold prospects who don\'t know what LifeWork OS is yet. Takes them through a 90-second quiz, generates a custom AI blueprint of how the platform fits their life. Conversion rate is higher because it teaches before asking for the sale.</p>\
+<h3>LifeWork OS page link</h3>\
+<p><code>cpdblackbook.com/lifeworkos?ref=YOUR_ID</code></p>\
+<p>Best for warm leads who already understand what you\'re offering. Lands them on the full product page with plans, pricing, and the pitch. Fewer steps to checkout.</p>\
+<h2>What\'s Tracked</h2>\
+<ul><li><strong>Visitors</strong> — raw click count</li>\
+<li><strong>Leads captured</strong> — email/phone submitted</li>\
+<li><strong>Conversions</strong> — signed up and paid</li>\
+<li><strong>Earned lifetime</strong> — total commission generated from this link</li></ul>\
+<h2>The Share Kit</h2>\
+<p>One-tap buttons: Copy Link, Copy Message (pre-written), Email, Text, Copy Social Caption. Every button fires a <code>/track-link-share</code> event so you know which channels perform.</p>\
+<div class="callout scenario"><div class="callout-title">Scenario: Reactivating cold prospects</div><p>Pull your last 20 people who asked about the platform but didn\'t buy. Send each of them the <strong>Fit Finder</strong> link personally — "Hey, they just launched a free 90-second tool that builds a custom blueprint for you." The quiz sells for you. You earn the same 40% when they convert as if you pitched from scratch.</p></div>'
+  },
+
+  'team': {
+    crumb:'Money & Growth › My Team',
+    body: '\
+<h2>What It Is</h2>\
+<p>Your downline view. Every rep, agent, or member you\'ve personally onboarded. Their plan, their production, their MRR that you earn on.</p>\
+<h2>What You Can Do</h2>\
+<ul><li>See each team member\'s status (active, churned, upgraded)</li>\
+<li>See the MRR you\'re earning on each one</li>\
+<li>Message them directly via Inbox</li>\
+<li>See their own referral count (they\'re building their downline too)</li>\
+<li>Flag at-risk accounts (dropped usage, missed payment)</li></ul>\
+<h2>Why It Matters</h2>\
+<p>Every person on this list is recurring revenue. Keeping them active is as valuable as finding new ones. A churned referral is MRR lost.</p>\
+<div class="callout scenario"><div class="callout-title">Scenario: Manager quarterly check-in</div><p>End of quarter. Open My Team. Sort by "usage last 30 days." The three lowest-usage members are your churn risk. DM them through Inbox with a quick "saw you haven\'t logged in — what\'s up, anything I can help with?" Retention conversation. One save = $100-$200 saved MRR.</p></div>'
+  },
+
+  // ═════ SALES ═════
+  'catalog': {
+    crumb:'Sales & Deals › Product Catalog',
+    body: '\
+<h2>What It Is</h2>\
+<p>The canonical menu. Every plan, every feature, every commission rate, every credit allowance. Shareable with prospects, embeddable in pitches, always current.</p>\
+<h2>Why It\'s The Source of Truth</h2>\
+<p>The Catalog renders directly from the live plan data in the vault. When pricing changes, every page referencing the Catalog updates automatically. You never pitch stale numbers.</p>\
+<h2>What You Can Do Here</h2>\
+<ul><li>Browse every plan side-by-side</li>\
+<li>See your current plan highlighted</li>\
+<li>Upgrade or downgrade in-app</li>\
+<li>Copy the shareable product link with your referral ID</li>\
+<li>Copy the Fit Finder link — the AI-personalized version</li></ul>\
+<h2>Sharing</h2>\
+<p>The Catalog page itself has share buttons for the LifeWork OS page and the Fit Finder, both auto-tagged with your member ID. Anyone who buys after clicking = recurring commission to you.</p>'
+  },
+
+  'pipeline': {
+    crumb:'Sales & Deals › Pipeline / CRM',
+    body: '\
+<h2>What It Is</h2>\
+<p>Kanban-style deal board. Stages like "Lead → Qualified → Proposal → Negotiation → Closed Won/Lost." Drag cards across stages. Every action auto-logs.</p>\
+<h2>Shared Brain Superpowers</h2>\
+<ul><li>Add a contact from Exec Prospector → it appears here in one click</li>\
+<li>Run Fact Finder on any contact → the intel drawer populates inline</li>\
+<li>Save a proposal in Deal Room → the card auto-moves to Proposal stage</li>\
+<li>Every note, email, report tied to that contact surfaces in their card</li></ul>\
+<h2>What You See Per Card</h2>\
+<p>Contact name, company, role, deal value, probability, last activity, intel drawer (Fact Finder), attached reports, attached proposals, all messages.</p>\
+<div class="callout scenario"><div class="callout-title">Scenario: Rep on a Monday</div><p>Open Pipeline. See 3 deals in "Proposal" stage with no activity in 10 days. One click → Fact Finder shows two of them had company news last week. Send a quick "saw your recent announcement, congrats — wanted to check in on the proposal" message via Inbox. Deal un-stalls. The entire loop took 4 minutes because every tool knew about the others.</p></div>'
+  },
+
+  'factfinder': {
+    crumb:'Sales & Deals › Fact Finder',
+    body: '\
+<h2>What It Is</h2>\
+<p>AI-powered people intel. Paste a name (optionally with a company), get a rich dossier: current role, reach, rep/agent, notable recent moves, best-next-action. Dual-writes to the contact graph so every tool knows about this person.</p>\
+<h2>The Intel Drawer</h2>\
+<p>Once a contact is enriched, the drawer follows them everywhere — in Pipeline, Exec Prospector, Directory, Agency PM, inbox threads. Always one click away.</p>\
+<h2>What To Use It For</h2>\
+<ul><li>Before a cold email — know what they actually do</li>\
+<li>Before a call — know their recent moves</li>\
+<li>Before a pitch — know who reps them, what category they\'re known for</li>\
+<li>After an intro — enrich before you reply so you come back smart</li></ul>\
+<div class="callout scenario"><div class="callout-title">Scenario: Warm intro</div><p>A member in the Directory DMs you: "I want to intro you to Jamie — she runs marketing at [brand]." Before you reply, run Fact Finder on Jamie + brand. You get: her role, recent campaigns she led, who she reports to, the brand\'s last three partnerships. You reply to the intro with specific, relevant context. She notices. You book the meeting.</p></div>'
+  },
+
+  'agency': {
+    crumb:'Sales & Deals › Agency PM',
+    body: '\
+<h2>What It Is</h2>\
+<p>Project management for client work. Think Asana, but every project is plugged into the rest of your ecosystem — contacts, reports, proposals, calendar, messages all co-located.</p>\
+<h2>What Lives In A Project</h2>\
+<ul><li>Tasks with owners, due dates, priorities</li>\
+<li>Attached reports (AI-generated or uploaded)</li>\
+<li>Attached proposals from Deal Room</li>\
+<li>Co-editors (other members you\'ve invited)</li>\
+<li>Linked contacts (the client, the team, stakeholders)</li>\
+<li>Activity log — every change, timestamped</li></ul>\
+<h2>Use Cases</h2>\
+<ul><li>Agency running multiple client accounts</li>\
+<li>Rep managing an enterprise deal with internal stakeholders</li>\
+<li>Creator managing brand-partnership deliverables</li>\
+<li>Realtor managing a listing from prep → close</li></ul>'
+  },
+
+  'reports-drive': {
+    crumb:'Sales & Deals › Reports Drive',
+    body: '\
+<h2>What It Is</h2>\
+<p>The canonical library of <strong>every AI-generated report you\'ve ever made.</strong> Campaign Attack briefs, Brand Intel scans, Artist Deep Intel, Listing Lab outputs, Deal Room proposals, Exec Prospector dossiers — all of it, in one place.</p>\
+<h2>How It Gets Here</h2>\
+<p>Every AI tool in the ecosystem dual-writes: the report lands in the tool that made it, and it lands here automatically. You never have to "save as" anything.</p>\
+<h2>What You Can Do</h2>\
+<ul><li><strong>Search</strong> — across titles, tags, and body text</li>\
+<li><strong>Share</strong> — drop into an Inbox thread with a slash command</li>\
+<li><strong>Attach</strong> — pin to a Pipeline card or an Agency project</li>\
+<li><strong>Invite co-editors</strong> — other members can comment or edit</li>\
+<li><strong>Download</strong> — PDF for email, print, client delivery</li>\
+<li><strong>Tag & filter</strong> — by client, by category, by date</li></ul>\
+<div class="callout"><div class="callout-title">Why This Matters</div><p>No more "where did I save that?" No more duplicate exports. No more losing a report you paid credits to generate. Everything you\'ve ever made is one search away, forever.</p></div>'
+  },
+
+  'campaign-cal': {
+    crumb:'Sales & Deals › Campaign Calendar',
+    body: '\
+<h2>What It Is</h2>\
+<p>Unified schedule. Every post, pitch, send-out, launch — across every channel, across every client — on one visual calendar. Drag to reschedule. Click for context.</p>\
+<h2>Auto-Sync</h2>\
+<ul><li>Content Studio schedules a post → it appears here</li>\
+<li>Campaign Attack generates a launch plan → adds every beat here</li>\
+<li>Deal Room flags a proposal deadline → surfaces here</li>\
+<li>Manually add anything else</li></ul>\
+<h2>Filters</h2>\
+<p>By client, by platform (IG / X / LinkedIn / email / press), by status (draft / scheduled / sent / posted), by owner (if team).</p>'
+  },
+
+  'campaign-attack': {
+    crumb:'Sales & Deals › Campaign Attack',
+    body: '\
+<h2>What It Is</h2>\
+<p>One-prompt campaign generator. Feed it a brief — product, audience, goal, timeframe — and it generates the full attack plan.</p>\
+<h2>What Comes Out</h2>\
+<ul><li>Core messaging pillars</li>\
+<li>Primary angles (3-5 distinct hooks)</li>\
+<li>Channel mix with reasoning</li>\
+<li>Week-by-week schedule</li>\
+<li>Sample copy per channel</li>\
+<li>Assets needed checklist</li>\
+<li>KPIs to measure</li></ul>\
+<h2>Downstream Actions</h2>\
+<p>Click "Deploy to Calendar" and every scheduled beat lands in Campaign Calendar. Click "Send to Content Studio" and your drafts are queued. Click "Save Report" and it\'s in Reports Drive forever.</p>\
+<div class="callout scenario"><div class="callout-title">Scenario: Fast turn for a client</div><p>Client calls Monday: "We\'re launching the capsule Friday, what\'s our plan?" Open Campaign Attack. 90 seconds of prompting. 3 credits spent. Output: a full 5-day rollout with angles, copy, schedule, assets. Deploy to Calendar. Share the report via Inbox. Send to Agency PM as tasks. You did 40 hours of work in 4 minutes.</p></div>'
+  },
+
+  'deal-room': {
+    crumb:'Sales & Deals › Deal Room',
+    body: '\
+<h2>What It Is</h2>\
+<p>AI proposal builder. Input the deal variables — client, scope, pricing, terms, deliverables — and it generates a polished, branded proposal PDF.</p>\
+<h2>What It Handles</h2>\
+<ul><li>Scope of work copy</li>\
+<li>Pricing tables + payment terms</li>\
+<li>Timeline / milestones</li>\
+<li>Assumptions and exclusions</li>\
+<li>Your branding, your signature block</li>\
+<li>E-sign integration (when configured)</li></ul>\
+<h2>Shared Brain Play</h2>\
+<p>Save a proposal → the Pipeline card for that contact auto-moves to "Proposal" stage. Reports Drive gets a copy. Agency PM can attach it to a project.</p>'
+  },
+
+  // ═════ INTELLIGENCE ═════
+  'brand-intel': {
+    crumb:'Intelligence › Brand Intel',
+    body: '\
+<h2>What It Is</h2>\
+<p>Live brand scorecards. For any brand you care about — your client, a competitor, a prospect\'s account — you get a daily-refreshed scorecard.</p>\
+<h2>The Scorecard</h2>\
+<ul><li><strong>Overall score</strong> (0-100) with direction arrow</li>\
+<li><strong>Momentum</strong> (30-day trend)</li>\
+<li><strong>Sentiment</strong> (public-facing perception)</li>\
+<li><strong>Partnerships</strong> (recent collabs, endorsements)</li>\
+<li><strong>Category position</strong></li>\
+<li><strong>Recent moves</strong> (news, launches, hires)</li></ul>\
+<h2>Use Cases</h2>\
+<ul><li>Pitch prep — show up with context</li>\
+<li>Competitive intel — know what theirs is doing</li>\
+<li>Account health — flag clients who are cooling off</li>\
+<li>Deal sizing — a higher-score brand pays more</li></ul>'
+  },
+
+  'culture-scanner': {
+    crumb:'Intelligence › Culture Scanner',
+    body: '\
+<h2>What It Is</h2>\
+<p>A signal feed of what\'s actually popping — across music, fashion, sports, tech, internet culture. Refreshed daily. The goal: you know about it hours or days before the mainstream does.</p>\
+<h2>What\'s In The Feed</h2>\
+<ul><li>Rising artists, moments, moods</li>\
+<li>Brand partnerships that are actually landing</li>\
+<li>Micro-trends with momentum scores</li>\
+<li>Creator signals (who\'s breaking out)</li>\
+<li>Meme economy status</li></ul>\
+<h2>Why It Matters</h2>\
+<p>Whoever sees it first has the edge. Agencies use it to pitch relevance. Creators use it to ride waves. Brand teams use it to avoid embarrassing launches.</p>'
+  },
+
+  'blackbook': {
+    crumb:'Intelligence › The Blackbook',
+    body: '\
+<h2>What It Is</h2>\
+<p>Kalshi prediction-market intelligence terminal. Live contract prices on political, cultural, economic events. Think of it as "what the market thinks is going to happen" — and whether the crowd is wrong.</p>\
+<h2>What You See</h2>\
+<ul><li>Live bid/ask across major event categories</li>\
+<li>Volume and open interest</li>\
+<li>Historical price chart</li>\
+<li>News items attached to each contract</li>\
+<li>Your watchlist with alerts</li></ul>\
+<h2>Use Cases</h2>\
+<p>Event-driven decision support. If you\'re a reporter, a strategist, or an investor, prediction-market prices are one of the best leading indicators available.</p>'
+  },
+
+  'market': {
+    crumb:'Intelligence › Market Command',
+    body: '\
+<h2>What It Is</h2>\
+<p>Crypto + equities trading terminal. Watchlists, candle charts, news feed, price alerts — one integrated screen.</p>\
+<h2>Features</h2>\
+<ul><li>Real-time quotes across major exchanges</li>\
+<li>Custom watchlists</li>\
+<li>Multi-timeframe charts</li>\
+<li>News correlated to tickers</li>\
+<li>Price and volume alerts</li></ul>\
+<div class="callout warning"><div class="callout-title">Not Financial Advice</div><p>Market Command is a data terminal. It shows you the market; it does not advise you. All trading decisions are yours.</p></div>'
+  },
+
+  'realty': {
+    crumb:'Intelligence › Realty Command',
+    body: '\
+<h2>What It Is</h2>\
+<p>Real estate operator\'s workstation. Market heat, comps, listing generation, investor analytics — the full workflow for realtors, investors, and PM teams.</p>\
+<h2>Modules</h2>\
+<ul><li><strong>Market Heat</strong> — neighborhood-level signals updated daily</li>\
+<li><strong>Comps Finder</strong> — active + sold comps with adjustments</li>\
+<li><strong>Listing Lab</strong> — AI-generated listing copy, social captions, email blasts</li>\
+<li><strong>Investor Analytics</strong> — cap rate, cash-on-cash, DSCR modeling</li>\
+<li><strong>Deal Pipeline</strong> — reserved for RE-specific stage flow</li></ul>\
+<div class="callout scenario"><div class="callout-title">Scenario: Saturday open house prep</div><p>Friday night. Listing Lab: 2 credits → full listing copy + 4 social captions + email-blast draft + "hot sheet" one-pager PDF. Print the one-pager for the open house. Schedule the posts in Campaign Calendar. Email blast fires Saturday AM. You did a full marketing push in 20 minutes.</p></div>'
+  },
+
+  'sports-brief': {
+    crumb:'Intelligence › Sports Brief',
+    body: '\
+<h2>What It Is</h2>\
+<p>Daily sports slate. Every game, every line, every injury note, every narrative — condensed into a briefing.</p>\
+<h2>What It Includes</h2>\
+<ul><li>Full day\'s slate across major leagues</li>\
+<li>Opening vs. current lines</li>\
+<li>Injury designations and late scratches</li>\
+<li>Weather for outdoor games</li>\
+<li>Narrative context (trends, streaks, storylines)</li></ul>\
+<p>Useful for media people, bettors, fans, brand-partnerships teams working with athletes.</p>'
+  },
+
+  'drive': {
+    crumb:'Intelligence › CPD Drive',
+    body: '\
+<h2>What It Is</h2>\
+<p>Your working filesystem inside the platform. Upload any file — PDFs, images, decks, spreadsheets, docs. Tag them. Find them. Attach them anywhere.</p>\
+<h2>What Makes It Different</h2>\
+<p>Unlike Google Drive or Dropbox, CPD Drive is wired to the shared brain:</p>\
+<ul><li>Attach a PDF to a Pipeline card</li>\
+<li>Attach a deck to an Agency project</li>\
+<li>Share a file into an Inbox thread with one click</li>\
+<li>Mention a contact in a file note → that contact\'s card sees it</li></ul>\
+<h2>Quotas</h2>\
+<p>Storage varies by plan. Enterprise = effectively unlimited.</p>'
+  },
+
+  'intelligence-board': {
+    crumb:'Intelligence › Intelligence Board',
+    body: '\
+<h2>What It Is</h2>\
+<p>The operator\'s wall. Every signal from every intel tool — Brand Intel, Culture Scanner, Blackbook, Market, Sports Brief — rendered as a single real-time command center.</p>\
+<h2>Layout</h2>\
+<p>Configurable panels. Pin the watchlists, signals, and scores that matter for your work. Everything refreshes automatically as the source tools update.</p>\
+<h2>Who Uses This</h2>\
+<p>Founders, strategists, agency heads, publishers — anyone who needs a cross-category view of "what\'s moving" in one glance.</p>'
+  },
+
+  'tv': {
+    crumb:'Intelligence › CPD TV',
+    body: '\
+<h2>What It Is</h2>\
+<p>Curated short-form video briefings. 60-second daily segments on culture, markets, sports — produced by the CPD Blackbook editorial desk.</p>\
+<h2>Why Watch</h2>\
+<p>Context in the time it takes to make coffee. The signal without the noise.</p>'
+  },
+
+  // ═════ COMMUNITY ═════
+  'profile': {
+    crumb:'Community › My Profile',
+    body: '\
+<h2>What It Is</h2>\
+<p>Your public face in the network. Bio, role, specialties, links, badges, deals closed, referrals tier, social.</p>\
+<h2>Why It Matters</h2>\
+<p>Every DM, every Directory hover, every forum post links back to your profile. A strong profile = more inbound intros.</p>\
+<h2>What To Fill In</h2>\
+<ul><li>Role + specialty (what you do, who for)</li>\
+<li>City / region</li>\
+<li>Social links (IG, X, LinkedIn)</li>\
+<li>Specialty tags (the work you want more of)</li>\
+<li>Case studies / pinned wins</li></ul>'
+  },
+
+  'inbox': {
+    crumb:'Community › Inbox',
+    body: '\
+<h2>What It Is</h2>\
+<p>Real-time member-to-member messaging. 1:1 and group threads. Wired to the message bus so shares, attachments, and mentions are instant.</p>\
+<h2>Superpowers</h2>\
+<ul><li><strong>/share report</strong> — slash command drops a Reports Drive item into thread</li>\
+<li><strong>@mention</strong> — pings a member + logs to their activity</li>\
+<li><strong>Attach Pipeline card</strong> — send a deal\'s context to someone</li>\
+<li><strong>Read receipts</strong> — know when they\'ve seen it</li></ul>'
+  },
+
+  'directory': {
+    crumb:'Community › Member Directory',
+    body: '\
+<h2>What It Is</h2>\
+<p>Every member, searchable. Filter by specialty, city, plan tier, tags. Click for the profile.</p>\
+<h2>Members CRM</h2>\
+<p>Built in: your own private notes on any member. "Met at LA summit, wants intro to beverage brands." The note is yours — nobody else sees it.</p>\
+<h2>Use Cases</h2>\
+<ul><li>Find the right member for a client intro</li>\
+<li>Build your own warm network of allies</li>\
+<li>Identify recruits for your downline</li></ul>'
+  },
+
+  'forum': {
+    crumb:'Community › Forum',
+    body: '\
+<h2>What It Is</h2>\
+<p>Topic-organized discussion. Ask questions, drop wins, coordinate plays, share tactics.</p>\
+<h2>Rules of The Room</h2>\
+<ul><li>Be specific — "closed a $40k deal using Fact Finder + Deal Room combo, here\'s how" beats "the tools are great"</li>\
+<li>Cite what worked, not just what exists</li>\
+<li>Pay forward — answer threads in your specialty</li></ul>'
+  },
+
+  'plug': {
+    crumb:'Community › The Plug',
+    body: '\
+<h2>What It Is</h2>\
+<p>Live classifieds feed. Time-sensitive: gigs, collabs, assets for sale, intros needed. Posts expire so the feed stays fresh.</p>\
+<h2>What To Post Here</h2>\
+<ul><li>"Need a photographer in Miami Saturday"</li>\
+<li>"Selling 2025 Super Bowl suite — 6 seats"</li>\
+<li>"Looking for an intro to [exec] at [brand]"</li>\
+<li>"Launching a fund, DM for deck"</li></ul>\
+<h2>Etiquette</h2>\
+<p>Specific. Actionable. Expires when the thing is resolved.</p>'
+  },
+
+  'classifieds': {
+    crumb:'Community › Classifieds Board',
+    body: '\
+<h2>What It Is</h2>\
+<p>Persistent version of The Plug. For sales, for-hire listings, long-running opportunities. Sortable, searchable.</p>'
+  },
+
+  'blog': {
+    crumb:'Community › Member Blog',
+    body: '\
+<h2>What It Is</h2>\
+<p>Long-form posts from members. Case studies, teardowns, op-eds, "how we won this deal" post-mortems.</p>\
+<h2>Why Write Here</h2>\
+<p>Every post ties back to your profile. Showing work = inbound intros + respect in the network. Evergreen content compounds.</p>'
+  },
+
+  'skool': {
+    crumb:'Community › Skool Community',
+    body: '\
+<h2>What It Is</h2>\
+<p>Structured courses + cohort discussion. Members-only curriculum taught by operators in the network.</p>'
+  },
+
+  // ═════ SPECIALIST SUITES ═════
+  'anr-suite': {
+    crumb:'Specialist Suites › A&R Suite',
+    body: '\
+<h2>What It Is</h2>\
+<p>Music-industry operator suite. Built for A&R, managers, label execs, indie artists who run like labels.</p>\
+<h2>Modules</h2>\
+<ul><li><strong>Artist Deep Intel</strong> — one-shot dossier on any artist: streams, socials, touring, label status, catalog, collaborators</li>\
+<li><strong>Roster Analytics</strong> — if you manage multiple artists, see the full book</li>\
+<li><strong>Release Planning</strong> — calendar + deliverables for a release cycle</li>\
+<li><strong>Scouting Feed</strong> — rising artists with velocity scores</li></ul>'
+  },
+
+  'creator-command': {
+    crumb:'Specialist Suites › Creator Command',
+    body: '\
+<h2>What It Is</h2>\
+<p>Operating system for a professional creator. Audience signals + brand pipeline + content plan + rate card + deal room — all in one.</p>\
+<h2>Modules</h2>\
+<ul><li><strong>Brand Deals Pipeline</strong> — sponsor opportunities from inbound to signed</li>\
+<li><strong>Audience Signals</strong> — growth + engagement across platforms</li>\
+<li><strong>Content Plan</strong> — calendar of posts, synced to Content Studio</li>\
+<li><strong>Rate Card</strong> — your live pricing sheet, shareable</li>\
+<li><strong>Deal Templates</strong> — saved usage-rights + scope templates</li></ul>'
+  },
+
+  'exec-suite': {
+    crumb:'Specialist Suites › Exec Prospector',
+    body: '\
+<h2>What It Is</h2>\
+<p>Decision-maker finder. Search by role + company + industry. Get verified contact context. Send to Pipeline in one click.</p>\
+<h2>What You Get Per Exec</h2>\
+<ul><li>Verified title + tenure</li>\
+<li>Company context (size, revenue band, category)</li>\
+<li>LinkedIn + professional links</li>\
+<li>Recent mentions in press</li>\
+<li>Shared connections in your network</li></ul>\
+<h2>Workflow</h2>\
+<p>Find → enrich with Fact Finder → Send to Pipeline → start the pursuit. All four steps, 60 seconds.</p>'
+  },
+
+  'content-studio': {
+    crumb:'Specialist Suites › Content Studio',
+    body: '\
+<h2>What It Is</h2>\
+<p>Plan, write, schedule, and rotate content across channels. AI captions in your brand voice (the voice gets smarter with every post you approve).</p>\
+<h2>What It Handles</h2>\
+<ul><li>IG, X, LinkedIn, TikTok, Threads posting</li>\
+<li>Multi-variant caption generation</li>\
+<li>Rotation scheduling (don\'t repeat content too soon)</li>\
+<li>Best-time-to-post suggestions per channel</li>\
+<li>Asset library (pull from CPD Drive)</li></ul>\
+<h2>Voice Learning</h2>\
+<p>The more posts you approve or edit, the better the AI\'s understanding of how <em>you</em> write. By day 90, drafts are materially closer to "send it" quality.</p>'
+  },
+
+  'rep-suite': {
+    crumb:'Specialist Suites › Rep Suite',
+    body: '\
+<h2>What It Is</h2>\
+<p>Field Command Center for sales reps. Territory view, account list, production tracking, field visit logging, quota pacing.</p>\
+<h2>What Reps See</h2>\
+<ul><li>Accounts assigned to them, sorted by priority</li>\
+<li>Visit log with GPS-stamped entries</li>\
+<li>Production vs. quota for the period</li>\
+<li>Pipeline pull-through</li>\
+<li>Today\'s routed field schedule</li></ul>'
+  },
+
+  'rep-suite-admin': {
+    crumb:'Specialist Suites › Rep Suite Admin',
+    body: '\
+<h2>What It Is</h2>\
+<p>Manager view of Rep Suite. Every rep\'s production, every territory\'s heat, team scorecards, onboarding.</p>\
+<h2>Manager Workflows</h2>\
+<ul><li>Weekly 1:1 prep (pull a rep\'s data in one click)</li>\
+<li>Quarterly territory rebalancing</li>\
+<li>New rep onboarding checklist</li>\
+<li>Team-wide leaderboards</li></ul>'
+  },
+
+  'client-apps': {
+    crumb:'Specialist Suites › Client Apps',
+    body: '\
+<h2>What It Is</h2>\
+<p>White-labeled mini-apps you can send clients. Interactive, branded with your logo, shareable via link. The client doesn\'t need a platform account.</p>\
+<h2>What You Can Send</h2>\
+<ul><li>Quick-fit calculators (e.g. an ROI calculator pre-filled for their business)</li>\
+<li>Interactive proposals</li>\
+<li>Onboarding questionnaires</li>\
+<li>Decision trees for qualifying them</li></ul>'
+  },
+
+  // ═════ ADMIN ═════
+  'admin-console': {
+    crumb:'Admin & Ops › Admin Console',
+    body: '\
+<h2>What It Is</h2>\
+<p>The platform-owner command center. For team admins and CPD operations. Full member roster, plan changes, activity logs, manual overrides, credit grants, suspensions.</p>\
+<h2>Access</h2>\
+<p>Gated to admin-role members only. Every action in here is audit-logged in triple-detail.</p>'
+  },
+
+  'reports': {
+    crumb:'Admin & Ops › Reports',
+    body: '\
+<h2>What It Is</h2>\
+<p>Cross-member reporting for admins. Not to be confused with Reports Drive (your personal AI-output library). This is roll-up analytics.</p>\
+<h2>What You Can Export</h2>\
+<ul><li>Member activity by week / month / quarter</li>\
+<li>Credit consumption by tool, by plan tier</li>\
+<li>Commission liabilities (outstanding vs. paid)</li>\
+<li>Referral funnel performance</li>\
+<li>Churn risk flags</li></ul>'
+  },
+
+  'earnings-admin': {
+    crumb:'Admin & Ops › Earnings Ledger (Admin)',
+    body: '\
+<h2>What It Is</h2>\
+<p>Admin view of every commission across the org. Who\'s owed what, what\'s paid, what\'s pending, what\'s disputed.</p>'
+  },
+
+  // ═════ SCENARIOS ═════
+  'scenario-prospect-cold': {
+    crumb:'Scenarios › Cold Prospect',
+    body: '\
+<h2>The Situation</h2>\
+<p>You meet someone at an event or in a DM. They don\'t know what CPD Blackbook / LifeWork OS is. You want to plant the seed without a hard sell.</p>\
+<h2>The Move</h2>\
+<ol><li>Send them the <strong>Fit Finder</strong> link with your ref ID</li>\
+<li>Frame it casually: "They\'ve got a free 90-second thing that builds a custom AI blueprint for how the platform fits <em>your</em> specific work — worth 90 seconds"</li>\
+<li>The quiz does the selling. It asks about their work, goals, team, revenue — then generates a hyper-personalized report of what LifeWork OS would do for them specifically</li>\
+<li>If they convert after reading: you earn 40% recurring forever</li></ol>\
+<h2>Why This Works</h2>\
+<p>The Fit Finder turns a cold "check this out" into an "oh this is actually for me." Conversion rates are materially higher than sending them to a generic pricing page because the output is personalized.</p>\
+<h2>The Link</h2>\
+<p><code>cpdblackbook.com/fit-finder?ref=YOUR_ID</code></p>'
+  },
+
+  'scenario-prospect-warm': {
+    crumb:'Scenarios › Warm Prospect',
+    body: '\
+<h2>The Situation</h2>\
+<p>Someone already understands roughly what the platform does. They want the details — plans, pricing, features. They\'re shopping.</p>\
+<h2>The Move</h2>\
+<ol><li>Send the <strong>LifeWork OS product page</strong> link with your ref ID</li>\
+<li>Frame it direct: "Here\'s the full breakdown — plans, pricing, what you get at each tier"</li>\
+<li>Optionally include a one-liner on which plan you\'d recommend for their use case</li>\
+<li>They land on the page, see your ID attached, sign up — you earn</li></ol>\
+<h2>Why Two Links</h2>\
+<p>Cold people need education — use Fit Finder. Warm people need a menu — use LifeWork OS page. Using the right link for the heat level improves conversion a lot.</p>\
+<h2>The Link</h2>\
+<p><code>cpdblackbook.com/lifeworkos?ref=YOUR_ID</code></p>'
+  },
+
+  'scenario-client-kickoff': {
+    crumb:'Scenarios › Client Kickoff',
+    body: '\
+<h2>The Situation</h2>\
+<p>You\'ve closed a new agency client. You need to mobilize fast — no "first week finding our footing" nonsense.</p>\
+<h2>The Playbook</h2>\
+<ol><li><strong>Day 1, morning.</strong> Create the project in Agency PM. Invite stakeholders. Pull their contact cards from Fact Finder.</li>\
+<li><strong>Day 1, afternoon.</strong> Run Brand Intel on their brand. Save to Reports Drive. Share via Inbox with their team.</li>\
+<li><strong>Day 2.</strong> Campaign Attack with the first month\'s brief. Deploy to Campaign Calendar. Content Studio drafts the first week of posts.</li>\
+<li><strong>Day 3.</strong> Deal Room generates the SOW / renewal proposal for the quarter. E-sign.</li>\
+<li><strong>Day 5.</strong> First Agency PM status report goes out — auto-generated from project activity.</li></ol>\
+<h2>Why It Closes Them</h2>\
+<p>Most agencies spend 2 weeks in kickoff. You just did 2 weeks of visible work in 5 days. Client tells their network. Your referral flywheel starts.</p>'
+  },
+
+  'scenario-rep-onboard': {
+    crumb:'Scenarios › Rep Onboarding',
+    body: '\
+<h2>The Situation</h2>\
+<p>You\'re an agency/team lead. You\'ve recruited a new rep. Get them to first closed deal in 30 days.</p>\
+<h2>The 30-Day Plan</h2>\
+<h3>Week 1 — Orientation</h3>\
+<ul><li>Set them up in Rep Suite with assigned territory</li>\
+<li>Have them complete the Library "Getting Started" articles (this thing you\'re reading)</li>\
+<li>Introduce them in Directory, add to team threads</li></ul>\
+<h3>Week 2 — Pipeline Build</h3>\
+<ul><li>Exec Prospector: target 50 accounts in territory</li>\
+<li>Fact Finder on top 10 targets</li>\
+<li>Send intro messages through Inbox templates</li></ul>\
+<h3>Week 3 — First Engagements</h3>\
+<ul><li>First meetings booked</li>\
+<li>Brand Intel run on top 3 live opportunities</li>\
+<li>Deal Room preps first proposal</li></ul>\
+<h3>Week 4 — First Close</h3>\
+<ul><li>Proposal delivered, negotiated, signed</li>\
+<li>Agency PM project kicked off</li>\
+<li>Win logged in Pipeline, bonus credits granted</li></ul>\
+<h2>What You (Manager) Track</h2>\
+<p>Rep Suite Admin: quota pacing, activity score, conversion ratio. 1:1 weekly using their data as the agenda. Every week you catch an issue = one less month of ramp.</p>'
+  },
+
+  'scenario-creator-launch': {
+    crumb:'Scenarios › Creator Launch Week',
+    body: '\
+<h2>The Situation</h2>\
+<p>You\'re a creator with a product launch (merch drop, course, app, single). You have 7 days.</p>\
+<h2>The Plays (by day)</h2>\
+<h3>Day -7: Strategy</h3>\
+<p>Campaign Attack with the brief. Output = full rollout. Save to Reports Drive.</p>\
+<h3>Day -5: Content</h3>\
+<p>Content Studio: generate 14 posts (teaser + launch + post-launch). Schedule across IG, X, TikTok in Campaign Calendar.</p>\
+<h3>Day -3: Deals</h3>\
+<p>Creator Command: line up 3 brand collabs for launch-week co-promo. Deal Room handles the terms.</p>\
+<h3>Day -1: Culture Read</h3>\
+<p>Culture Scanner: confirm the moment isn\'t stepping on a bigger news beat. Adjust timing if needed.</p>\
+<h3>Day 0: Launch</h3>\
+<p>Everything is scheduled. You\'re on camera, not in Photoshop.</p>\
+<h3>Day +1 to +3: Amplification</h3>\
+<p>Repost wins, creator reposts, client reposts. Content Studio handles rotation.</p>\
+<h3>Day +7: Review</h3>\
+<p>Creator Command analytics → what worked, what didn\'t. Save the post-mortem as a blog post in Member Blog.</p>'
+  },
+
+  'scenario-user-daily': {
+    crumb:'Scenarios › Daily Operator Routine',
+    body: '\
+<h2>The Morning (15 min)</h2>\
+<ol><li>Open the dashboard. Read the Daily Command Brief (pre-generated)</li>\
+<li>Check Inbox for overnight DMs</li>\
+<li>Glance at The Bank — any new commissions?</li>\
+<li>Check Pipeline for stalled cards older than 7 days</li></ol>\
+<h2>The Workday (focus blocks)</h2>\
+<ol><li>Block 1: pick one stalled Pipeline card → Fact Finder + outreach</li>\
+<li>Block 2: one new prospect through Exec Prospector → Send to Pipeline</li>\
+<li>Block 3: content through Content Studio (draft, approve, schedule)</li>\
+<li>Block 4: client work via Agency PM</li></ol>\
+<h2>The Evening (5 min)</h2>\
+<ol><li>One Fit Finder link shared with someone you met today</li>\
+<li>One Forum or Directory interaction (build network)</li>\
+<li>Close laptop</li></ol>\
+<h2>The Week</h2>\
+<p>Every Sunday, 20 minutes in The Bank + Earnings reviewing commission trend. Every Friday, one blog post or win shared in Forum.</p>'
+  },
+
+  'scenario-referral-earner': {
+    crumb:'Scenarios › Pure Referral Earner',
+    body: '\
+<h2>The Situation</h2>\
+<p>You\'re not primarily using LifeWork OS for your own work — you\'re on it primarily to earn the recurring commissions by referring others.</p>\
+<h2>The Minimum Viable Stack</h2>\
+<ol><li><strong>Intro Member ($50/mo)</strong> — unlocks the 40% commission tier</li>\
+<li><strong>Profile</strong> — fully filled in, because every click goes back to it</li>\
+<li><strong>Referral Tracker</strong> — this becomes your primary dashboard</li>\
+<li><strong>The Bank</strong> — your income statement</li></ol>\
+<h2>The Weekly Motion</h2>\
+<ul><li>Share Fit Finder link in 5 personal conversations</li>\
+<li>Post one piece of content that organically mentions the platform</li>\
+<li>One Forum post per week sharing a win</li>\
+<li>Check Referral Tracker for click-to-convert funnel — which channels work?</li></ul>\
+<h2>The Math That Gets Interesting</h2>\
+<p>10 referrals × $40/mo average = $400/mo recurring. 25 = $1,000/mo. 50 = $2,000/mo. For as long as they stay. Nothing else you can do online pays this reliably.</p>'
+  },
+
+  'scenario-team-manager': {
+    crumb:'Scenarios › Team Manager Playbook',
+    body: '\
+<h2>The Situation</h2>\
+<p>You run a team — agency, sales org, creator collective. Multiple people on different seats. Your job is performance, not individual production.</p>\
+<h2>The Stack You Need</h2>\
+<ul><li><strong>Business Member ($250/mo)</strong> or <strong>Biz Plus ($500/mo)</strong> — team seats unlock</li>\
+<li><strong>Rep Suite Admin</strong> — your manager view</li>\
+<li><strong>Agency PM</strong> — for any client work</li>\
+<li><strong>My Team</strong> — for the people you\'ve onboarded to the platform itself</li></ul>\
+<h2>Daily Manager Ops</h2>\
+<ol><li>Rep Suite Admin: quota pacing, flag anyone below pace</li>\
+<li>Pipeline: roll-up across all reps — which deals need manager help?</li>\
+<li>Inbox: respond to rep escalations</li>\
+<li>Admin Console (if applicable): any system issues</li></ol>\
+<h2>Weekly</h2>\
+<p>1:1 with every rep using their Rep Suite data as the agenda. No surprises — the numbers are right there. Coach, don\'t interrogate.</p>\
+<h2>Monthly</h2>\
+<p>Team scorecard out of Reports (Admin). Recognize top performers publicly in Forum. Address bottom performers privately in Inbox.</p>'
+  },
+
+  // ═════ REFERRAL LINKS (overview) ═════
+  'referral-kit': {
+    crumb:'Referral Links › Kit',
+    body: '\
+<h2>Your Two Primary Links</h2>\
+<p>Every link below is auto-tagged with your member ID (if you\'re loading this inside the dashboard). Every signup through these links pays you 40% recurring on their subscription (15% on Enterprise) for as long as they stay.</p>'
+    // special: this article gets referral-link UI appended by JS
+  }
+};
+
+
+/* ════════════════════════════════════════════════════════════════
+   HOSTED DOCUMENTS
+   ════════════════════════════════════════════════════════════════ */
+
+var DOCS = [
+  { id:'architecture-pdf', name:'How LifeWork OS Works — Full Architecture Brief', type:'md',
+    size:'10 pages', updated:'Apr 2026',
+    src:'lifework-os-how-it-works.md',
+    desc:'The canonical walkthrough. The three layers, the shared brain, the security model.' },
+  { id:'plans-onepager', name:'Plans & Pricing — One-Pager', type:'pdf',
+    size:'1 page', updated:'Apr 2026',
+    src:'plans-onepager.pdf',
+    desc:'Print-ready comparison of all 7 tiers. Drop on a desk, close the deal.' },
+  { id:'referral-playbook', name:'Referral Playbook', type:'pdf',
+    size:'8 pages', updated:'Apr 2026',
+    src:'referral-playbook.pdf',
+    desc:'Scripts, templates, and messaging for earning the 40% recurring.' },
+  { id:'rep-onboarding', name:'Rep Onboarding Checklist', type:'doc',
+    size:'4 pages', updated:'Apr 2026',
+    src:'rep-onboarding.docx',
+    desc:'The 30-day ramp plan. Hand it to every new rep Day 1.' },
+  { id:'client-kickoff', name:'Client Kickoff Playbook', type:'doc',
+    size:'6 pages', updated:'Apr 2026',
+    src:'client-kickoff.docx',
+    desc:'Day-by-day first week for any new agency client.' },
+  { id:'fit-finder-scripts', name:'Fit Finder Share Scripts', type:'txt',
+    size:'2 pages', updated:'Apr 2026',
+    src:'fit-finder-scripts.txt',
+    desc:'Pre-written copy for text, email, DM, and social. Paste and go.' },
+  { id:'creator-launch', name:'Creator Launch Week Playbook', type:'pdf',
+    size:'7 pages', updated:'Apr 2026',
+    src:'creator-launch.pdf',
+    desc:'7-day rollout plan for any creator launch — drop, course, single, app.' },
+  { id:'tool-cheatsheet', name:'Tool Cheat Sheet', type:'pdf',
+    size:'2 pages', updated:'Apr 2026',
+    src:'tool-cheatsheet.pdf',
+    desc:'Every tool, one-line description, best-use case. Print-and-pin.' }
+];
+
+/* ════════════════════════════════════════════════════════════════
+   RENDERING
+   ════════════════════════════════════════════════════════════════ */
+
+function renderSidebar(){
+  var nav = document.getElementById('sb-nav');
+  var html = '';
+  html += '<button class="sb-item" data-route="home" onclick="go(\'home\')"><span class="sb-dot"></span><span class="sb-item-lbl">Home</span></button>';
+  CATEGORIES.forEach(function(c){
+    var count = c.id === 'docs' ? DOCS.length
+              : c.id === 'referrals' ? 4
+              : c.id === 'scenarios' ? 8
+              : TOOLS.filter(function(t){return t.cat===c.id}).length;
+    html += '<button class="sb-item" data-route="cat:'+c.id+'" onclick="go(\'cat:'+c.id+'\')">'
+         + '<span class="sb-dot"></span>'
+         + '<span class="sb-item-lbl">'+c.label+'</span>'
+         + '<span class="sb-item-count">'+count+'</span>'
+         + '</button>';
+  });
+  nav.innerHTML = html;
+}
+
+function renderTopbarRight(){
+  var el = document.getElementById('tb-right');
+  el.innerHTML = ''
+    + '<button class="btn gold" onclick="go(\'cat:referrals\')">'
+    + '<svg viewBox="0 0 14 14" fill="currentColor"><path d="M7 1l1.5 4h4L9.5 7.5 11 12 7 9.5 3 12l1.5-4.5L1.5 5h4z"/></svg>'
+    + 'Get Links</button>';
+}
+
+function setActive(route){
+  document.querySelectorAll('.sb-item').forEach(function(b){
+    b.classList.toggle('active', b.getAttribute('data-route')===route);
+  });
+}
+
+function showView(name){
+  document.querySelectorAll('.view').forEach(function(v){ v.classList.remove('active'); });
+  var el = document.getElementById('view-' + name);
+  if(el) el.classList.add('active');
+  document.getElementById('main').scrollTop = 0;
+  // close mobile sidebar
+  document.getElementById('sidebar').classList.remove('open');
+}
+
+/* ── HOME VIEW ── */
+function renderHome(){
+  var v = document.getElementById('view-home');
+  var coreTools = TOOLS.filter(function(t){return t.cat==='getting-started'});
+  var salesTools = TOOLS.filter(function(t){return t.cat==='sales'}).slice(0,6);
+  var intelTools = TOOLS.filter(function(t){return t.cat==='intel'}).slice(0,6);
+
+  var html = '';
+  html += '<div class="hero">'
+       +   '<div class="hero-eyebrow">◆ CPD BLACKBOOK · LIFEWORK OS</div>'
+       +   '<div class="hero-title">THE <span>LIBRARY</span></div>'
+       +   '<div class="hero-sub">Every tool in the ecosystem. How to use them. Scenarios for prospects, clients, reps, and operators. Hosted documents you can print, download, share. Every referral link, built with your ID. Search anything.</div>'
+       +   '<div class="hero-stats">'
+       +     '<div class="hero-stat"><div class="hero-stat-lbl">Tools Documented</div><div class="hero-stat-val gold">'+TOOLS.length+'</div></div>'
+       +     '<div class="hero-stat"><div class="hero-stat-lbl">Scenarios</div><div class="hero-stat-val">8</div></div>'
+       +     '<div class="hero-stat"><div class="hero-stat-lbl">Docs On File</div><div class="hero-stat-val">'+DOCS.length+'</div></div>'
+       +     '<div class="hero-stat"><div class="hero-stat-lbl">Referral Links</div><div class="hero-stat-val green">4</div></div>'
+       +   '</div>'
+       + '</div>';
+
+  html += '<div class="sec">'
+       +   '<div class="sec-head"><div class="sec-title">Start Here</div><div class="sec-sub">the fundamentals</div></div>'
+       +   '<div class="grid">' + coreTools.map(toolCard).join('') + '</div>'
+       + '</div>';
+
+  html += '<div class="sec">'
+       +   '<div class="sec-head"><div class="sec-title">Sales & Deals</div><a class="sec-sub" onclick="go(\'cat:sales\')" style="cursor:pointer;color:var(--gold)">view all →</a></div>'
+       +   '<div class="grid">' + salesTools.map(toolCard).join('') + '</div>'
+       + '</div>';
+
+  html += '<div class="sec">'
+       +   '<div class="sec-head"><div class="sec-title">Intelligence</div><a class="sec-sub" onclick="go(\'cat:intel\')" style="cursor:pointer;color:var(--gold)">view all →</a></div>'
+       +   '<div class="grid">' + intelTools.map(toolCard).join('') + '</div>'
+       + '</div>';
+
+  html += '<div class="sec">'
+       +   '<div class="sec-head"><div class="sec-title">Your Referral Kit</div><div class="sec-sub">earn 40% recurring</div></div>'
+       +   refLinkBlock('lifeworkos', LW_BASE_URL, 'LifeWork OS Page', 'Send warm leads straight to the product page. Plans, pricing, features — one scroll. 40% recurring commission on every paid plan they choose.')
+       +   refLinkBlock('fitfinder', FF_BASE_URL, 'Fit Finder (AI Quiz)', 'Send cold prospects through a 90-second quiz that builds them a custom AI blueprint of how LifeWork OS fits their life. Higher conversion than a cold product page.')
+       + '</div>';
+
+  v.innerHTML = html;
+}
+
+function toolCard(t){
+  var category = CATEGORIES.filter(function(c){return c.id===t.cat})[0];
+  return '<div class="card" onclick="go(\'tool:'+t.id+'\')">'
+       +   '<span class="card-tag '+(t.tag||'core')+'">'+(category?category.label:'')+'</span>'
+       +   '<div class="card-title">'+t.title+'</div>'
+       +   '<div class="card-desc">'+t.desc+'</div>'
+       +   '<div class="card-foot">'
+       +     '<span class="card-meta">READ →</span>'
+       +     '<span class="card-arrow">OPEN</span>'
+       +   '</div>'
+       + '</div>';
+}
+
+function scenarioCard(id, title, desc){
+  return '<div class="card" onclick="go(\'tool:'+id+'\')">'
+       +   '<span class="card-tag core">Scenario</span>'
+       +   '<div class="card-title">'+title+'</div>'
+       +   '<div class="card-desc">'+desc+'</div>'
+       +   '<div class="card-foot">'
+       +     '<span class="card-meta">PLAY →</span>'
+       +     '<span class="card-arrow">RUN</span>'
+       +   '</div>'
+       + '</div>';
+}
+
+/* ── CATEGORY VIEW ── */
+function renderCategory(catId){
+  var cat = CATEGORIES.filter(function(c){return c.id===catId})[0];
+  if(!cat){ renderHome(); return; }
+  var v = document.getElementById('view-category');
+
+  var html = '<div class="hero" style="padding:28px 32px;margin-bottom:20px">'
+           +   '<div class="hero-eyebrow">◆ CATEGORY</div>'
+           +   '<div class="hero-title" style="font-size:44px">'+cat.label.toUpperCase()+'</div>'
+           +   '<div class="hero-sub" style="margin-top:8px">'+cat.desc+'</div>'
+           + '</div>';
+
+  if(catId === 'scenarios'){
+    html += '<div class="grid">'
+         + scenarioCard('scenario-prospect-cold',  'Cold Prospect',          'Someone who\'s never heard of LifeWork OS. How you plant the seed without a hard sell.')
+         + scenarioCard('scenario-prospect-warm',  'Warm Prospect',          'They know what it is. They want the menu. Send them the product page — earn the commission.')
+         + scenarioCard('scenario-client-kickoff', 'Client Kickoff',         'New agency client — mobilize in 5 days, not 2 weeks. Day-by-day.')
+         + scenarioCard('scenario-rep-onboard',    'Rep Onboarding',         'New sales rep → first closed deal in 30 days. The weekly plan.')
+         + scenarioCard('scenario-creator-launch', 'Creator Launch Week',    'A creator launching a product in 7 days. The full pre- and post-launch rollout.')
+         + scenarioCard('scenario-user-daily',     'Daily Operator Routine', 'The morning, workday, evening, week loop that actually compounds.')
+         + scenarioCard('scenario-referral-earner','Pure Referral Earner',   'You\'re here mostly to earn the 40%. The minimum viable stack + weekly motion.')
+         + scenarioCard('scenario-team-manager',   'Team Manager Playbook',  'You run a team. What you track daily, weekly, monthly.')
+         + '</div>';
+  }
+  else if(catId === 'referrals'){
+    html += '<p style="color:var(--dim);font-size:15px;line-height:1.6;margin-bottom:24px">Every link below is auto-tagged with your member ID. Share via any channel. Every signup = <strong style="color:var(--gold)">40% recurring commission</strong> for as long as the subscription stays active (15% on Enterprise).</p>';
+    html += refLinkBlock('lifeworkos', LW_BASE_URL, 'LifeWork OS Product Page', 'The full pitch. Plans, pricing, features. Best for warm leads who already know what you\'re selling.');
+    html += refLinkBlock('fitfinder', FF_BASE_URL, 'Fit Finder — AI Blueprint Quiz', 'Free 90-second quiz that generates a personalized blueprint. Best for cold prospects — the quiz sells for you.');
+    html += refLinkBlock('library',    LIB_BASE_URL, 'The Library (this page)', 'Share the knowledge base itself. Useful for educating someone on what the platform actually does before asking them to buy.');
+    html += refLinkBlock('dashboard-preview', 'https://cpdblackbook.com/dashboard-preview', 'Dashboard Preview', 'A walkthrough view of the actual dashboard. For prospects who want to see the UI before signing up.');
+  }
+  else if(catId === 'docs'){
+    html += '<p style="color:var(--dim);font-size:15px;line-height:1.6;margin-bottom:20px">Hosted documents. Click to open, download, or share. Everything here is the current version — updated whenever the platform changes.</p>';
+    html += '<div class="doc-list">' + DOCS.map(docRow).join('') + '</div>';
+  }
+  else {
+    var list = TOOLS.filter(function(t){return t.cat===catId});
+    html += '<div class="grid">' + list.map(toolCard).join('') + '</div>';
+  }
+
+  v.innerHTML = html;
+}
+
+/* ── ARTICLE VIEW ── */
+function renderArticle(toolId){
+  var tool = TOOLS.filter(function(t){return t.id===toolId})[0];
+  var article = ARTICLES[toolId];
+
+  // scenarios are keyed by the scenario id in ARTICLES but have no TOOLS entry
+  var title, desc, tag, crumb, body;
+  if(tool){
+    title = tool.title;
+    desc  = tool.desc;
+    tag   = tool.tag;
+    crumb = (CATEGORIES.filter(function(c){return c.id===tool.cat})[0] || {}).label || '';
+  } else if(article){
+    var crumbParts = (article.crumb||'').split('›').map(function(s){return s.trim()});
+    crumb = crumbParts[0] || '';
+    title = crumbParts[crumbParts.length-1] || toolId;
+    desc  = '';
+    tag   = 'core';
+  }
+  if(!article){
+    article = { crumb: crumb + ' › ' + title, body:'<p>Full documentation for this tool is being written. For now, see the <a onclick="go(\'home\')" style="color:var(--gold);cursor:pointer">home page</a> overview or reach out via Forum.</p>' };
+  }
+
+  var v = document.getElementById('view-article');
+  var refHtml = '';
+  if(toolId === 'referral-kit'){
+    refHtml = refLinkBlock('fitfinder', FF_BASE_URL, 'Fit Finder — AI Blueprint', 'For cold prospects. 90-second quiz, custom output.')
+            + refLinkBlock('lifeworkos', LW_BASE_URL, 'LifeWork OS — Product Page', 'For warm leads. Full pitch, plans, pricing.');
+  }
+
+  v.innerHTML = ''
+    + '<div class="article">'
+    + '  <div class="article-head">'
+    + '    <div class="article-crumb"><a onclick="go(\'home\')">Library</a> › '+article.crumb+'</div>'
+    + '    <div class="article-title">'+title.toUpperCase()+'</div>'
+    + (desc ? '    <div class="article-sub">'+desc+'</div>' : '')
+    + '    <div class="article-actions">'
+    + '      <button class="btn gold" onclick="shareArticle(\''+toolId+'\',\''+escAttr(title)+'\')">'
+    +          '<svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M3 7h8M7 3l4 4-4 4"/></svg>'
+    +          'Share</button>'
+    + '      <button class="btn" onclick="printArticle()">'
+    +          '<svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="1" width="8" height="4"/><rect x="1" y="5" width="12" height="6" rx="1"/><rect x="3" y="9" width="8" height="4"/></svg>'
+    +          'Print</button>'
+    + '      <button class="btn" onclick="copyArticleLink(\''+toolId+'\')">'
+    +          '<svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="4" y="4" width="9" height="9" rx="1"/><path d="M10 4V2a1 1 0 00-1-1H2a1 1 0 00-1 1v7a1 1 0 001 1h2"/></svg>'
+    +          'Copy Link</button>'
+    + '    </div>'
+    + '  </div>'
+    + '  <div class="article-body" id="article-body-content">'
+    + article.body
+    + refHtml
+    + '  </div>'
+    + '</div>';
+  refreshRefLinks();
+}
+
+function escAttr(s){ return (s||'').replace(/'/g,"\\'").replace(/"/g,'&quot;'); }
+
+/* ── REFERRAL LINK BLOCK ── */
+function refLinkBlock(id, baseUrl, title, desc){
+  var link = buildRefLink(baseUrl);
+  return '<div class="reflink">'
+       + '  <div class="reflink-eyebrow">◆ YOUR LINK · 40% RECURRING</div>'
+       + '  <div class="reflink-title">'+title+'</div>'
+       + '  <div class="reflink-sub">'+desc+'</div>'
+       + '  <div class="reflink-row">'
+       + '    <div class="reflink-box" data-reflink="'+baseUrl+'">'+link+'</div>'
+       + '    <button class="btn gold" onclick="copyRef(\''+baseUrl+'\',\''+id+'\',this)">COPY LINK</button>'
+       + '  </div>'
+       + '  <div class="reflink-share">'
+       + '    <button class="btn" onclick="shareRef(\''+baseUrl+'\',\''+id+'\',\'message\')">💬 Copy Message</button>'
+       + '    <button class="btn" onclick="shareRef(\''+baseUrl+'\',\''+id+'\',\'email\')">✉ Email</button>'
+       + '    <button class="btn" onclick="shareRef(\''+baseUrl+'\',\''+id+'\',\'sms\')">📱 SMS</button>'
+       + '    <button class="btn" onclick="shareRef(\''+baseUrl+'\',\''+id+'\',\'social\')">📣 Social Caption</button>'
+       + '  </div>'
+       + '</div>';
+}
+
+function copyRef(baseUrl, sourceId, btn){
+  var link = buildRefLink(baseUrl);
+  silentCopy(link, function(){
+    var orig = btn.textContent;
+    btn.textContent = '✓ COPIED';
+    setTimeout(function(){ btn.textContent = orig; }, 2000);
+    trackLinkShare(sourceId);
+    toast('Link copied — share anywhere','green');
+  });
+}
+
+function shareRef(baseUrl, sourceId, mode){
+  var link = buildRefLink(baseUrl);
+  var isLW = baseUrl.indexOf('lifeworkos') > -1;
+  var isFF = baseUrl.indexOf('fit-finder') > -1;
+  var product = isFF ? 'the Fit Finder' : 'LifeWork OS';
+
+  if(mode === 'message'){
+    var msg;
+    if(isFF){
+      msg = "Yo — check this out. It's a free 90-second AI thing called Fit Finder. You answer a few questions about what you do and it spits out a custom blueprint of how this platform (LifeWork OS by CPD Blackbook) would work for you specifically. Worth the 90 seconds: " + link;
+    } else {
+      msg = "Putting this on your radar — LifeWork OS by CPD Blackbook. It's the all-in-one OS for whatever hustle you're running. Pipeline, content, AI tools, community, referrals — the whole stack. Plans + pricing here: " + link;
+    }
+    silentCopy(msg, function(){ toast('Message copied — paste anywhere','green'); trackLinkShare(sourceId); });
+  }
+  else if(mode === 'email'){
+    var subject, body;
+    if(isFF){
+      subject = "Thought you'd vibe with this — free AI blueprint";
+      body = "Hey,\n\nRan across this free tool called Fit Finder. You answer a few questions and it generates a custom AI blueprint of how this platform (LifeWork OS) would fit your specific work. Takes 90 seconds.\n\nTry it: " + link + "\n\nLet me know what you think.";
+    } else {
+      subject = "LifeWork OS — the all-in-one OS I've been using";
+      body = "Hey,\n\nWanted to put this on your radar — LifeWork OS by CPD Blackbook. Full operating system for running everything in one place: pipeline, content, AI tools, community, referrals.\n\nHere's the product page with plans + pricing:\n" + link + "\n\nLet me know what you think.";
+    }
+    window.open('mailto:?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body));
+    toast('Email draft opened','green');
+    trackLinkShare(sourceId);
+  }
+  else if(mode === 'sms'){
+    var smsBody = isFF
+      ? "Check this — free 90-second AI blueprint tool: " + link
+      : "You should see this — LifeWork OS: " + link;
+    var isMobile = /iPhone|iPad|Android/i.test(navigator.userAgent);
+    if(isMobile){ window.location.href = 'sms:?&body=' + encodeURIComponent(smsBody); }
+    else{ silentCopy(smsBody, function(){ toast('Text copied — send from your phone','green'); }); }
+    trackLinkShare(sourceId);
+  }
+  else if(mode === 'social'){
+    var caption;
+    if(isFF){
+      caption = "Found a legit free tool.\n\nFit Finder — 90 seconds, a few questions about your work, spits out a custom AI blueprint of how LifeWork OS (by @cpdblackbook) fits your life.\n\nTry it 👇\n\n" + link;
+    } else {
+      caption = "Stop running your business across 14 different apps.\n\nLifeWork OS by @cpdblackbook is the all-in-one OS for creators, founders, reps, and agents. One login. One stack. Everything plugged in.\n\nPlans + pricing 👇\n\n" + link;
+    }
+    silentCopy(caption, function(){ toast('Caption copied — drop it on IG/X/LinkedIn','green'); trackLinkShare(sourceId); });
+  }
+}
+
+/* ── DOC ROW ── */
+function docRow(d){
+  var cls = d.type;
+  var link = d.src ? d.src : '#';
+  return '<div class="doc">'
+       + '  <div class="doc-ico '+cls+'">'+d.type.toUpperCase()+'</div>'
+       + '  <div class="doc-main">'
+       + '    <div class="doc-name">'+d.name+'</div>'
+       + '    <div class="doc-meta">'+d.size+' · UPDATED '+d.updated+'</div>'
+       + '  </div>'
+       + '  <div class="doc-acts">'
+       + '    <a class="doc-act" href="'+link+'" target="_blank" title="Open" rel="noopener">'
+       +      '<svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M3 11V3h4M11 7v4H3M7 3h4v4M7 7l4-4"/></svg>'
+       + '    </a>'
+       + '    <a class="doc-act" href="'+link+'" download title="Download">'
+       +      '<svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M7 2v8m-3-3l3 3 3-3M2 12h10"/></svg>'
+       + '    </a>'
+       + '    <button class="doc-act" onclick="printDoc(\''+link+'\')" title="Print">'
+       +      '<svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="1" width="8" height="4"/><rect x="1" y="5" width="12" height="6" rx="1"/><rect x="3" y="9" width="8" height="4"/></svg>'
+       + '    </button>'
+       + '    <button class="doc-act" onclick="shareDoc(\''+d.id+'\',\''+escAttr(d.name)+'\',\''+link+'\')" title="Share">'
+       +      '<svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="4" cy="7" r="1.5"/><circle cx="10" cy="3" r="1.5"/><circle cx="10" cy="11" r="1.5"/><path d="M5 6l4-2M5 8l4 2"/></svg>'
+       + '    </button>'
+       + '  </div>'
+       + '</div>';
+}
+
+function printDoc(src){
+  if(!src || src === '#'){ toast('Document not yet uploaded'); return; }
+  var w = window.open(src, '_blank');
+  if(w){ setTimeout(function(){ try{ w.print(); }catch(e){} }, 800); }
+}
+
+function shareDoc(id, name, src){
+  // Build shareable link. Absolute if relative, else as-is.
+  var abs = /^https?:/.test(src) ? src : (location.origin + '/' + src.replace(/^\//,''));
+  silentCopy(abs, function(){ toast('Document link copied','green'); });
+}
+
+/* ── ARTICLE ACTIONS ── */
+function shareArticle(toolId, title){
+  var base = LIB_BASE_URL + '#tool:' + toolId;
+  var link = buildRefLink(base);
+  silentCopy(link, function(){
+    toast('Article link copied','green');
+    trackLinkShare('library_article_'+toolId);
+  });
+}
+
+function copyArticleLink(toolId){
+  var base = LIB_BASE_URL + '#tool:' + toolId;
+  var link = buildRefLink(base);
+  silentCopy(link, function(){ toast('Link copied','green'); });
+}
+
+function printArticle(){
+  var el = document.getElementById('article-body-content');
+  if(!el) return;
+  var titleEl = document.querySelector('.article-title');
+  var crumbEl = document.querySelector('.article-crumb');
+  var w = window.open('', '_blank', 'width=900,height=900');
+  if(!w){ toast('Pop-ups blocked — allow them to print'); return; }
+  w.document.write(
+    '<html><head><title>'+(titleEl?titleEl.textContent:'CPD Library')+'</title>'
+    + '<style>body{font-family:Georgia,serif;max-width:760px;margin:40px auto;padding:0 20px;color:#111;line-height:1.6}'
+    + 'h1{font-size:28px;border-bottom:2px solid #000;padding-bottom:10px}'
+    + 'h2{font-size:22px;margin-top:28px}h3{font-size:17px;color:#555}'
+    + '.crumb{font-size:12px;color:#888;text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px}'
+    + '.callout{background:#f5f5f0;border-left:3px solid #aa8833;padding:12px 16px;margin:14px 0;border-radius:0 4px 4px 0}'
+    + '.callout-title{font-weight:bold;margin-bottom:4px}'
+    + 'code{background:#f0f0f0;padding:2px 5px;border-radius:3px;font-family:Menlo,monospace;font-size:13px}'
+    + 'ul,ol{padding-left:22px}li{margin-bottom:4px}'
+    + '.footer{margin-top:40px;border-top:1px solid #ccc;padding-top:14px;font-size:12px;color:#888;text-align:center}'
+    + '</style></head><body>'
+    + (crumbEl ? '<div class="crumb">'+crumbEl.textContent+'</div>' : '')
+    + (titleEl ? '<h1>'+titleEl.textContent+'</h1>' : '')
+    + el.innerHTML
+    + '<div class="footer">CPD Blackbook · LifeWork OS · The Library</div>'
+    + '</body></html>'
+  );
+  w.document.close();
+  setTimeout(function(){ try{ w.print(); }catch(e){} }, 500);
+}
+
+/* ════════════════════════════════════════════════════════════════
+   SEARCH
+   ════════════════════════════════════════════════════════════════ */
+
+function search(query){
+  var q = (query||'').trim().toLowerCase();
+  if(!q){ showView('home'); setActive('home'); return; }
+  var results = [];
+
+  // Tools
+  TOOLS.forEach(function(t){
+    var hay = (t.title + ' ' + t.desc + ' ' + (t.cat||'') + ' ' + (t.tag||'')).toLowerCase();
+    if(hay.indexOf(q) > -1){
+      results.push({ kind:'Tool', title:t.title, snippet:t.desc, route:'tool:'+t.id });
+    }
+  });
+
+  // Articles (bodies)
+  Object.keys(ARTICLES).forEach(function(id){
+    var a = ARTICLES[id];
+    // skip if already matched as a tool
+    if(results.some(function(r){return r.route==='tool:'+id})) return;
+    var plain = (a.body||'').replace(/<[^>]+>/g,' ');
+    var low = plain.toLowerCase();
+    var idx = low.indexOf(q);
+    if(idx > -1){
+      var start = Math.max(0, idx-60);
+      var end   = Math.min(plain.length, idx + q.length + 120);
+      var snip = (start>0?'…':'') + plain.substring(start,end) + (end<plain.length?'…':'');
+      var title = (a.crumb||'').split('›').pop().trim() || id;
+      results.push({ kind:'Article', title:title, snippet:snip, route:'tool:'+id });
+    }
+  });
+
+  // Categories
+  CATEGORIES.forEach(function(c){
+    var hay = (c.label + ' ' + c.desc).toLowerCase();
+    if(hay.indexOf(q) > -1){
+      results.push({ kind:'Category', title:c.label, snippet:c.desc, route:'cat:'+c.id });
+    }
+  });
+
+  // Docs
+  DOCS.forEach(function(d){
+    var hay = (d.name + ' ' + (d.desc||'')).toLowerCase();
+    if(hay.indexOf(q) > -1){
+      results.push({ kind:'Document', title:d.name, snippet:d.desc||'', route:'cat:docs' });
+    }
+  });
+
+  renderSearchResults(q, results);
+  showView('search');
+  setActive('');
+}
+
+function renderSearchResults(q, results){
+  var v = document.getElementById('view-search');
+  var html = '<div class="hero" style="padding:24px 28px;margin-bottom:18px">'
+           +   '<div class="hero-eyebrow">◆ SEARCH</div>'
+           +   '<div class="hero-title" style="font-size:40px">RESULTS FOR "'+escHtml(q).toUpperCase()+'"</div>'
+           +   '<div class="hero-sub" style="margin-top:6px">'+results.length+' match'+(results.length===1?'':'es')+' across tools, articles, categories, and documents.</div>'
+           + '</div>';
+
+  if(!results.length){
+    html += '<div class="search-empty">'
+         +    '<div class="search-empty-ico">?</div>'
+         +    '<div style="font-family:var(--fd);font-size:24px;letter-spacing:.05em">NOTHING FOUND</div>'
+         +    '<div style="margin-top:8px;color:var(--dim)">Try a different term, or browse categories from the sidebar.</div>'
+         +  '</div>';
+  } else {
+    html += '<div class="search-results">';
+    results.forEach(function(r){
+      html += '<div class="search-result" onclick="go(\''+r.route+'\')">'
+           +    '<div class="search-result-kind">'+r.kind+'</div>'
+           +    '<div class="search-result-title">'+r.title+'</div>'
+           +    '<div class="search-result-snippet">'+highlight(r.snippet, q)+'</div>'
+           +  '</div>';
+    });
+    html += '</div>';
+  }
+  v.innerHTML = html;
+}
+
+function highlight(txt, q){
+  if(!txt) return '';
+  var safe = escHtml(txt);
+  try{
+    var re = new RegExp('('+escRegex(q)+')','ig');
+    return safe.replace(re, '<mark>$1</mark>');
+  }catch(e){ return safe; }
+}
+function escHtml(s){ return (s||'').replace(/[&<>"']/g, function(c){
+  return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+}); }
+function escRegex(s){ return (s||'').replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
+
+/* ════════════════════════════════════════════════════════════════
+   ROUTING
+   ════════════════════════════════════════════════════════════════ */
+
+function safeSetHash(hash){
+  // replaceState fails in about:srcdoc (sandboxed previews); fall back to location.hash.
+  try { history.replaceState(null, '', '#' + hash); }
+  catch(e){
+    try { location.hash = hash; } catch(e2){ /* give up silently */ }
+  }
+}
+
+function go(route){
+  if(route === 'home'){
+    renderHome(); showView('home'); setActive('home');
+    safeSetHash('home');
+    return;
+  }
+  if(route.indexOf('cat:') === 0){
+    var catId = route.substring(4);
+    renderCategory(catId); showView('category'); setActive('cat:'+catId);
+    safeSetHash(route);
+    return;
+  }
+  if(route.indexOf('tool:') === 0){
+    var toolId = route.substring(5);
+    renderArticle(toolId); showView('article');
+    var tool = TOOLS.filter(function(t){return t.id===toolId})[0];
+    if(tool) setActive('cat:'+tool.cat); else setActive('');
+    safeSetHash(route);
+    return;
+  }
+  // fallback
+  renderHome(); showView('home'); setActive('home');
+}
+
+function toggleSidebar(){
+  document.getElementById('sidebar').classList.toggle('open');
+}
+
+/* ════════════════════════════════════════════════════════════════
+   INIT
+   ════════════════════════════════════════════════════════════════ */
+
+renderSidebar();
+renderTopbarRight();
+
+// Boot route — respect hash if present
+var initRoute = (location.hash||'').replace('#','') || 'home';
+go(initRoute);
+
+// Search wiring
+var sinput = document.getElementById('gsearch');
+var stimer;
+sinput.addEventListener('input', function(e){
+  clearTimeout(stimer);
+  var q = e.target.value;
+  stimer = setTimeout(function(){ search(q); }, 180);
+});
+sinput.addEventListener('keydown', function(e){
+  if(e.key === 'Escape'){ e.target.value=''; go('home'); }
+});
+// "/" to focus search
+document.addEventListener('keydown', function(e){
+  if(e.key === '/' && document.activeElement !== sinput &&
+     document.activeElement.tagName !== 'INPUT' &&
+     document.activeElement.tagName !== 'TEXTAREA'){
+    e.preventDefault(); sinput.focus();
+  }
+});
+
+// Listen for hash changes (back/forward)
+window.addEventListener('hashchange', function(){
+  var r = (location.hash||'').replace('#','') || 'home';
+  go(r);
+});
+
+console.log('[CPD Library] Loaded · Member:', MEMBER_ID || '(none yet)');
+
+</script>
+</body>
+</html>
