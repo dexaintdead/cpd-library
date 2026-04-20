@@ -513,7 +513,10 @@ var TOOLS = [
     desc:'One-prompt campaign generator. Brief goes in, full deployment plan comes out — angles, copy, channels, schedule.',
     page:'tool' },
   { id:'deal-room', cat:'sales', tag:'sales', title:'Deal Room',
-    desc:'AI proposal builder. Terms, pricing, scope, branded PDFs. Updates Pipeline stage on save.',
+    desc:'AI proposal builder with legally-binding e-signatures. Send, track, and close deals with SHA-256 tamper-evident hashing and full audit trails.',
+    page:'tool' },
+  { id:'deal-tracker', cat:'sales', tag:'sales', title:'Deal Tracker',
+    desc:'Live status for every deal you\'ve sent for signature. See who viewed, who signed, who\'s pending. Download certified copies. Void deals. ESIGN-Act compliant.',
     page:'tool' },
 
   // ── INTELLIGENCE ──
@@ -873,16 +876,20 @@ var ARTICLES = {
     body: '\
 <h2>What It Is</h2>\
 <p>The canonical library of <strong>every AI-generated report you\'ve ever made.</strong> Campaign Attack briefs, Brand Intel scans, Artist Deep Intel, Listing Lab outputs, Deal Room proposals, Exec Prospector dossiers — all of it, in one place.</p>\
+<h2>Three Tabs</h2>\
+<ul><li><strong>Drive</strong> — your personal workspace. Every report you\'ve generated, sorted by tool and date.</li>\
+<li><strong>Shared Reports</strong> — reports shared with you by other members, or that you\'ve shared out. Collaborate in real time.</li>\
+<li><strong>Signed Deals</strong> — every deal you\'ve sent for e-signature, with live signer status, audit trails, tamper-evident hashes, and certified-copy export. Track, resend, and void deals here.</li></ul>\
 <h2>How It Gets Here</h2>\
-<p>Every AI tool in the ecosystem dual-writes: the report lands in the tool that made it, and it lands here automatically. You never have to "save as" anything.</p>\
+<p>Every AI tool in the ecosystem dual-writes: the report lands in the tool that made it, and it lands here automatically. You never have to "save as" anything. Signed deals dual-write from Deal Room the moment you hit send.</p>\
 <h2>What You Can Do</h2>\
-<ul><li><strong>Search</strong> — across titles, tags, and body text</li>\
+<ul><li><strong>Search</strong> — across titles, tags, body text, and signer names</li>\
 <li><strong>Share</strong> — drop into an Inbox thread with a slash command</li>\
 <li><strong>Attach</strong> — pin to a Pipeline card or an Agency project</li>\
 <li><strong>Invite co-editors</strong> — other members can comment or edit</li>\
-<li><strong>Download</strong> — PDF for email, print, client delivery</li>\
-<li><strong>Tag & filter</strong> — by client, by category, by date</li></ul>\
-<div class="callout"><div class="callout-title">Why This Matters</div><p>No more "where did I save that?" No more duplicate exports. No more losing a report you paid credits to generate. Everything you\'ve ever made is one search away, forever.</p></div>'
+<li><strong>Download</strong> — PDF for email, print, client delivery; JSON for legal audit</li>\
+<li><strong>Tag & filter</strong> — by client, by category, by status, by date</li></ul>\
+<div class="callout"><div class="callout-title">Why This Matters</div><p>No more "where did I save that?" No more duplicate exports. No more losing a report you paid credits to generate. No more wondering if your client actually signed the deal. Everything you\'ve ever made — including every legally binding signature — is one search away, forever.</p></div>'
   },
 
   'campaign-cal': {
@@ -921,16 +928,44 @@ var ARTICLES = {
     crumb:'Sales & Deals › Deal Room',
     body: '\
 <h2>What It Is</h2>\
-<p>AI proposal builder. Input the deal variables — client, scope, pricing, terms, deliverables — and it generates a polished, branded proposal PDF.</p>\
+<p>AI proposal builder with built-in legally-binding e-signatures. Input the deal variables — client, scope, pricing, terms, deliverables — and it generates a polished, branded proposal. Then send it out for signature with one click.</p>\
 <h2>What It Handles</h2>\
 <ul><li>Scope of work copy</li>\
 <li>Pricing tables + payment terms</li>\
 <li>Timeline / milestones</li>\
 <li>Assumptions and exclusions</li>\
 <li>Your branding, your signature block</li>\
-<li>E-sign integration (when configured)</li></ul>\
+<li><strong>ESIGN Act / UETA compliant e-signatures</strong> — typed name + drawn canvas + full consent disclosure</li>\
+<li><strong>Tamper-evident SHA-256 hashing</strong> — any post-signature tampering is cryptographically detectable</li>\
+<li><strong>Immutable audit trail</strong> — every view, consent, and signature captured with IP, user-agent, and timestamp</li></ul>\
+<h2>How Signing Works</h2>\
+<p>Add your signers (client, counterparty, witness, approver) in the form. Click "Send for Signature." Each signer gets a unique, token-gated magic link. They review the frozen document, accept the ESIGN consent disclosure, type their name, optionally draw a signature, and the deal is executed. You get real-time notifications at every step.</p>\
+<h2>Legal Validity</h2>\
+<p>Signatures captured here are legally equivalent to wet-ink for all commercial deals — brand partnerships, event sponsorships, artist bookings, licensing agreements, management contracts, service agreements. Covered by the U.S. ESIGN Act (15 U.S.C. §7001) and the Uniform Electronic Transactions Act (UETA) adopted by 49 states. Not suitable for wills, divorces, court orders, or deeds requiring notarization.</p>\
 <h2>Shared Brain Play</h2>\
-<p>Save a proposal → the Pipeline card for that contact auto-moves to "Proposal" stage. Reports Drive gets a copy. Agency PM can attach it to a project.</p>'
+<p>Save a proposal → the Pipeline card for that contact auto-moves to "Proposal" stage. Reports Drive gets a copy. Agency PM can attach it to a project. Once a deal is signed, Deal Tracker shows it with full audit trail, and your earnings are attributed automatically.</p>'
+  },
+
+  'deal-tracker': {
+    crumb:'Sales & Deals › Deal Tracker',
+    body: '\
+<h2>What It Is</h2>\
+<p>Live dashboard for every proposal you\'ve sent for signature. See who viewed the deal, who signed, who\'s still pending, and who declined — in real time.</p>\
+<h2>What You See</h2>\
+<ul><li>Five status cards — Total Deals, Awaiting Signature, Partially Signed, Fully Signed, Signed Value</li>\
+<li>Filterable list by status (sent / partial / fully signed / voided) and sortable by date or value</li>\
+<li>Per-deal signer status pills — green for signed, blue for viewed, red for declined</li>\
+<li>Search across title, client name, and signer names</li></ul>\
+<h2>What You Can Do</h2>\
+<ul><li><strong>Resend signing links</strong> — copy or email to any pending signer</li>\
+<li><strong>Void pending deals</strong> — revoke all unsigned links with one click; signers get notified</li>\
+<li><strong>Download certified copies</strong> — print-ready PDF with signatures, timestamps, and IP addresses</li>\
+<li><strong>Download full JSON dossier</strong> — complete audit trail for legal discovery or dispute resolution</li>\
+<li><strong>View tamper-evident hash</strong> — the SHA-256 fingerprint that proves document integrity</li></ul>\
+<h2>Where to Find It</h2>\
+<p>Built into Reports Drive as the "Signed Deals" tab. Also available as a standalone view at <code>cpdblackbook.com/deals</code>. Admin can see all deals across all members from the Command Console.</p>\
+<h2>Shared Brain Play</h2>\
+<p>Every signature fires a notification to your inbox. Fully-signed deals trigger a Pipeline stage update. Commissions tied to signed deals flow automatically into Earnings. The admin Command Console keeps a permanent backup — your deals are never lost even if you delete them locally.</p>'
   },
 
   // ═════ INTELLIGENCE ═════
