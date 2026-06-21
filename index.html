@@ -446,6 +446,7 @@ function refreshRefLinks(){
 
 var CATEGORIES = [
   { id:'getting-started', label:'Getting Started', tag:'core',       desc:'How the platform works, the shared brain, the one wallet.' },
+  { id:'create',          label:'Studio & Creative', tag:'specialist', desc:'Studio, voice cloning, avatars, the Vault, and organizing your outputs.' },
   { id:'money',           label:'Money & Growth',  tag:'money',      desc:'Bank, earnings, referrals, team, credits.' },
   { id:'sales',           label:'Sales & Deals',   tag:'sales',      desc:'Pipeline, fact-finding, campaigns, agency PM.' },
   { id:'intel',           label:'Intelligence',    tag:'intel',      desc:'Brand intel, culture scanner, markets, sports, realty.' },
@@ -609,6 +610,35 @@ var TOOLS = [
     page:'tool' },
   { id:'earnings-admin', cat:'admin', tag:'admin', title:'Earnings Ledger',
     desc:'Admin view of every commission owed, paid, pending, across the org.',
+    page:'tool' },
+
+  // ── STUDIO & CREATIVE (added 2026-06) ──
+  { id:'studio', cat:'create', tag:'specialist', title:'Studio',
+    desc:'The flagship AI creation suite — images, video, music, voiceovers, avatars, and upscaling in one place.',
+    page:'tool' },
+  { id:'studio-organize', cat:'create', tag:'specialist', title:'Organize Your Outputs',
+    desc:'Name, auto-tag, and file every generation into a Vault folder as you create it.',
+    page:'tool' },
+  { id:'voice-clone', cat:'create', tag:'specialist', title:'Clone Your Voice',
+    desc:'Make a reusable copy of your voice for voiceovers and talking-avatar explainers.',
+    page:'tool' },
+  { id:'avatars', cat:'create', tag:'specialist', title:'Talking Avatars',
+    desc:'Turn a photo plus a script into a talking-head video. Drive it with your cloned voice.',
+    page:'tool' },
+  { id:'upscale', cat:'create', tag:'specialist', title:'Upscale Studio',
+    desc:'Sharpen and enlarge any image or video up to 4x. Saves to your Vault.',
+    page:'tool' },
+  { id:'vault', cat:'create', tag:'specialist', title:'The Vault',
+    desc:'Your media library — store, organize into folders, tag, and share files with members.',
+    page:'tool' },
+  { id:'meme-gif', cat:'create', tag:'specialist', title:'Meme & GIF Labs',
+    desc:'Fast meme and GIF makers wired straight into your Vault.',
+    page:'tool' },
+  { id:'brand-kits', cat:'create', tag:'specialist', title:'Brand Kits',
+    desc:'Save brand colors, logos, and fonts so every output stays on-brand.',
+    page:'tool' },
+  { id:'affiliate-dashboard', cat:'money', tag:'money', title:'Affiliate Dashboard',
+    desc:'Your clicks-to-paid funnel, vanity referral links, and live pending vs paid commission.',
     page:'tool' }
 ];
 
@@ -1493,6 +1523,48 @@ var ARTICLES = {
 <h2>Your Two Primary Links</h2>\
 <p>Every link below is auto-tagged with your member ID (if you\'re loading this inside the dashboard). Every signup through these links pays you 40% recurring on their subscription (15% on Enterprise) for as long as they stay.</p>'
     // special: this article gets referral-link UI appended by JS
+  },
+
+  // ═════ STUDIO & CREATIVE (added 2026-06) ═════
+  'studio': {
+    crumb:'Studio & Creative › Studio',
+    body: '<h2>What It Is</h2><p>Studio is the flagship creation suite. One place for AI <strong>images, video, music &amp; voiceovers, talking avatars, 3D, logos, captions, and upscaling</strong> — powered by 50+ models, all on your one credit wallet.</p><h2>How To Create</h2><ol><li>Open Studio and pick a <strong>mode</strong> on the left (Image, Video, Music/Audio, Avatars, Upscale, and more).</li><li>Pick a <strong>model</strong> — each card shows its strengths and credit cost per run.</li><li>Write your <strong>prompt</strong> (tap ✨ Enhance to sharpen it), optionally attach a reference from your Vault.</li><li>Set quantity (×1–×4) and hit <strong>Generate</strong>. Finished pieces land in your Vault.</li></ol><h2>Pro Tips</h2><ul><li>Use the <strong>Organize bar</strong> to name, tag, and file outputs as you go.</li><li>Lock a <strong>seed</strong> to iterate on a look you like.</li><li>Preview with a fast/cheap model before spending on premium runs.</li></ul>'
+  },
+  'studio-organize': {
+    crumb:'Studio & Creative › Organize Your Outputs',
+    body: '<h2>Stop The Messy Vault</h2><p>Right above the <strong>Generate</strong> button is the <strong>Organize bar</strong>. Set it before you generate and every output lands tidy.</p><h2>How To</h2><ol><li><strong>Name</strong> — type a name (batches auto-number -1, -2, -3).</li><li><strong>Folder</strong> — pick a Vault folder, or tap <strong>+ New</strong> to create one on the spot.</li><li><strong>Auto-tag</strong> — each output is automatically tagged with the model it came from.</li></ol><p>When the job finishes it is renamed, tagged, and filed — no more digging through an unsorted Vault.</p>'
+  },
+  'voice-clone': {
+    crumb:'Studio & Creative › Clone Your Voice',
+    body: '<h2>What It Is</h2><p>Make a reusable copy of your own voice for voiceovers and talking-avatar explainers.</p><h2>How To</h2><ol><li>Open <strong>Studio → Music/Audio</strong> and set the mode to <strong>Text → Voiceover</strong>.</li><li>Next to the Voice picker, tap <strong>🎙️ Clone</strong>.</li><li><strong>Record</strong> ~1–2 minutes of clear speech (quiet room, one speaker) or <strong>upload</strong> a clean clip.</li><li>Name it and clone. It saves to <strong>My Voices</strong>.</li></ol><h2>Use It On An Avatar</h2><p>Open <strong>Avatars</strong>, write your script, open <strong>📚 Voice Library</strong>, and tap <strong>Use</strong> on your cloned voice — your avatar speaks in your voice.</p><p><em>Voice cloning requires an ElevenLabs plan that includes it.</em></p>'
+  },
+  'avatars': {
+    crumb:'Studio & Creative › Talking Avatars',
+    body: '<h2>What It Is</h2><p>Turn a photo plus a script into a talking-head video — perfect for explainers and ads.</p><h2>How To</h2><ol><li>Open <strong>Studio → Avatars</strong>.</li><li>Add your image (or pick a built-in presenter) and write the script.</li><li>Choose a voice — a stock voice, or <strong>📚 Voice Library → Use</strong> your cloned voice to speak in your own voice.</li><li>Generate — the talking video saves to your Vault.</li></ol><p>Audio-driven models (Kling, Creatify, OmniHuman) need a voice track; HeyGen can speak a script directly. MP3 voice tracks work everywhere.</p>'
+  },
+  'upscale': {
+    crumb:'Studio & Creative › Upscale Studio',
+    body: '<h2>What It Is</h2><p>Sharpen and enlarge any image or video up to 4x — cleaner detail, crisp edges.</p><h2>How To</h2><ol><li>Open <strong>Studio → Upscale</strong>.</li><li>Pick a source from your Vault (or upload one).</li><li>Choose a factor (2x or 4x) and Generate. No prompt needed — the result saves to your Vault.</li></ol>'
+  },
+  'vault': {
+    crumb:'Studio & Creative › The Vault',
+    body: '<h2>What It Is</h2><p>Your media library. Every Studio output and upload lives here.</p><h2>Organize</h2><ul><li>Create <strong>folders</strong> and file items in (or file them at creation via the Studio Organize bar).</li><li><strong>Tag</strong> and <strong>rename</strong> so everything is easy to find.</li></ul><h2>Share &amp; Collaborate</h2><ul><li><strong>Share a folder</strong> with another member as viewer or editor.</li><li>Create a <strong>share link</strong> (optionally password-protected) for non-members.</li><li>See who has access under <strong>Folder members</strong>.</li></ul>'
+  },
+  'meme-gif': {
+    crumb:'Studio & Creative › Meme & GIF Labs',
+    body: '<h2>What It Is</h2><p>Fast, lightweight makers for memes and GIFs, wired straight into your Vault.</p><h2>How To</h2><ol><li>Open <strong>Meme Lab</strong> or <strong>GIF Lab</strong> from the sidebar.</li><li>Pick or paste an image (your Vault works), add text/frames.</li><li>Save — the result lands in your Vault to post or share.</li></ol>'
+  },
+  'brand-kits': {
+    crumb:'Studio & Creative › Brand Kits',
+    body: '<h2>What It Is</h2><p>Save your brand colors, logos, and fonts so every piece you make stays on-brand.</p><h2>How To</h2><ol><li>Open <strong>Brand Kits</strong> and create a kit.</li><li>Add your palette, logo, and fonts.</li><li>Apply the kit when creating in Studio or building reports/print pieces.</li></ol>'
+  },
+  'affiliate-dashboard': {
+    crumb:'Money & Growth › Affiliate Dashboard',
+    body: '<h2>What It Is</h2><p>The upgraded referral cockpit — see exactly how your sharing performs and what you have earned.</p><h2>Your Vanity Link</h2><p>On the Referrals page, claim a custom code (e.g. <code>yourname</code>) for a clean link: <code>cpdblackbook.com/join?ref=yourname</code>. Copy and share it anywhere.</p><h2>The Funnel</h2><p>Track <strong>Clicks → Signups → Paid</strong> with conversion rates, plus <strong>Paid vs Pending</strong> commission and a per-plan breakdown. Level 1 (your direct referral) and Level 2 (their referral) both pay.</p>'
+  },
+  'notifications-snooze': {
+    crumb:'Getting Started › Notifications & Snooze',
+    body: '<h2>The Bell</h2><p>The <strong>🔔</strong> top-right shows unread activity — messages, replies, @mentions, follows, deals, payouts. Tap an item to jump straight to it.</p><h2>Snooze (Remind Me Later)</h2><p>On any unread notification, tap <strong>⏰ Snooze</strong>. It disappears for a few hours, then comes back as a fresh ping — defer something without losing it.</p><h2>Email &amp; Digest</h2><p>The gear in the bell controls your master email toggle, a daily digest, and per-category mutes.</p>'
   }
 };
 
