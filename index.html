@@ -668,13 +668,151 @@ var TOOLS = [
     page:'tool' },
   { id:'integrations', cat:'admin', tag:'admin', title:'Integrations',
     desc:'Connect outside accounts (Google, social, and more) and manage member webhooks.',
-    page:'tool' }
+    page:'tool' },
+  // ── GUIDES (added 2026-06) ──
+  { id:'character-consistency', cat:'create', tag:'specialist', title:'Character Consistency',
+    desc:'Lock a character to a 95% match every time — character sheets, high-ref keyframes, seed, and LoRA.',
+    page:'tool' },
+  { id:'relay-commercial', cat:'create', tag:'specialist', title:'Relay Commercial Recipe',
+    desc:'A copy-paste Relay recipe for an abstract, premium branded promo loop.',
+    page:'tool' },
 ];
 
 /* ── DETAILED ARTICLE CONTENT ──
    Stored separately so search can scan titles/desc without pulling full bodies.
 */
 var ARTICLES = {
+
+  'character-consistency': {
+    crumb:'Studio & Creative \u203a Character Consistency',
+    body: `<p>How to get a <strong>95%+ consistent character</strong> every time in CPD Relay, why it sometimes drifts today, how to build proper character sheets, and where LoRA fits. Grounded in how your worker + models actually behave.</p>
+<h2>The one mechanic that controls everything</h2>
+<p>In Relay, every beat is <strong>image keyframe → animate</strong>. The animate (image-to-video) model accepts <strong>exactly one starting frame</strong> — your video models are capped at 1 image reference. So:</p>
+<div class="callout scenario"><p><strong>Identity is decided entirely at the keyframe. The animation just moves that frame.</strong> If the keyframe is a perfect likeness, the clip is a perfect likeness. If the keyframe drifts, the clip drifts.</p></div>
+<p>That means all of your consistency effort belongs at the <strong>image keyframe step</strong>. Get the keyframe right and the video follows.</p>
+<h2>Why it drifts a little today (the fixable part)</h2>
+<p>Your character system stores each character as a saved reference with a <strong>gallery</strong> — multiple images of that person. At generation, the character "fans out" its gallery into reference images, <strong>up to the model's reference cap</strong>. The caps matter enormously:</p>
+<div class="callout"><ul style="margin:0">
+<li><strong>Nano Banana Pro</strong> — <strong>14 refs</strong> ✅</li>
+<li><strong>Nano Banana 2 Edit</strong> — 14 refs ✅</li>
+<li><strong>Flux 2 Pro (edit)</strong> — 9 refs</li>
+<li><strong>Flux Kontext / Qwen / Flux dev</strong> — <strong>1 ref</strong> ⚠️</li>
+<li><strong>Nano Banana (base), Seedream, Ideogram, Imagen</strong> — <strong>0 refs</strong> ❌ (text-only — refs ignored)</li>
+</ul></div>
+<p>Two failure modes cause the "slight variations" you saw:</p>
+<ol>
+<li><strong>The keyframe model has a low/zero ref cap.</strong> If a shot's keyframe lands on a 1-ref or 0-ref model, your character's gallery is ignored or barely used — the model basically reinvents the face from the prompt each time. This is the #1 cause of drift.</li>
+<li><strong>The character only has 1–2 gallery images.</strong> Even on a 14-ref model, one reference can't pin a face across angles and expressions. More consistent reference images = stronger lock.</li>
+</ol>
+<p><strong>The fix is simple and high-leverage:</strong> force keyframes onto a <strong>high-ref model (Nano Banana Pro)</strong> whenever characters are cast, and feed it a <strong>rich gallery (a character sheet)</strong>.</p>
+<h2>Build a Character Sheet (do this once per character)</h2>
+<p>A "character sheet" here = a saved Character whose <strong>gallery holds 6–12 consistent images</strong> of that person — the reference set the model locks onto. More angles/expressions, same identity and wardrobe = a stronger lock.</p>
+<p><strong>Recommended sheet (per character):</strong></p>
+<ul>
+<li>2× front, neutral expression, eye-level</li>
+<li>1× front smiling, 1× front surprised/expressive</li>
+<li>1× 3/4 left, 1× 3/4 right</li>
+<li>1× profile</li>
+<li>1× full-body (for wardrobe + proportions)</li>
+<li>1–2× the signature outfit / hair detail close-up</li>
+</ul>
+<p><strong>How to build it in Studio today:</strong></p>
+<ol>
+<li>Generate or upload one strong "hero" image of the character (the canonical look).</li>
+<li>Save it as a <strong>Character</strong> (this becomes the gallery anchor).</li>
+<li>Use <strong>+ Add from Vault / Add to gallery</strong> to attach more angles. To <em>generate</em> matching angles, run the character with its own ref attached and prompts like "same girl, 3/4 left profile, neutral expression, same outfit" on <strong>Nano Banana Pro</strong>, approve the good ones, and add them to the gallery.</li>
+<li>Keep wardrobe/hair identical across the sheet. Reject any image that's even slightly off — a bad gallery image <em>weakens</em> the lock.</li>
+</ol>
+<p>Once the sheet exists, every Relay keyframe that casts that character pulls the whole sheet.</p>
+<h2>The 7 consistency techniques (in priority order)</h2>
+<ol>
+<li><strong>High-ref keyframe model.</strong> Use <strong>Nano Banana Pro</strong> for any keyframe with a cast character. This is the single biggest lever. <em>(I can make Relay default to this automatically — see "Recommended builds.")</em></li>
+<li><strong>Rich character sheet.</strong> 6–12 consistent gallery images per character (above).</li>
+<li><strong>Describe action, not faces.</strong> In shot prompts, describe pose/expression/scene — <strong>never re-describe the face/hair/skin</strong>. Re-describing fights the references and invites drift. Let the sheet own identity; let the prompt own action.</li>
+<li><strong>Lock the look in the Master Prompt.</strong> Put the shared style + any fixed wardrobe note in the relay's Master Prompt so it's identical on every shot.</li>
+<li><strong>Lock a seed.</strong> A fixed seed makes a keyframe reproducible, so re-runs land the same face. <em>(Relay doesn't expose seed yet — I can add a per-character seed.)</em></li>
+<li><strong>Animate gently on face shots.</strong> Big camera moves and fast motion are where faces warp. Use low-motion presets (float, slow push, parallax) for close dialogue shots; save energetic motion (crash-zoom, whip-pan) for non-face/b-roll shots.</li>
+<li><strong>Reuse approved hero frames.</strong> For repeated identical setups, don't regenerate — reuse an approved keyframe as the start frame (Relay's <strong>Source</strong> step) and just re-animate. The same frame in = the same face out, literally 100%.</li>
+</ol>
+<p>Do 1–4 and you're at a strong, repeatable look. Add 5–7 and you're at "I can hand this to a client every week."</p>
+<h2>Where LoRA fits (and the honest trade-off)</h2>
+<p>Your system <strong>can</strong> train a LoRA (<code>/studio/lora/train</code>, Flux.1-Fast and Flux.2 tiers) and stores the result on the character. A LoRA bakes a character into the model's weights — the strongest possible identity lock for <strong>one</strong> character.</p>
+<p><strong>But there's a real constraint in your stack:</strong> LoRA only applies on the <strong>Flux base models</strong> (the ones flagged <code>supports_lora</code>). It does <strong>not</strong> apply on <strong>Nano Banana Pro</strong> — the 14-ref model that's your best multi-character tool. And LoRA + Flux still only takes ~1 image ref. So you're choosing between two locking strategies:</p>
+<ul>
+<li><strong>Gallery + Nano Banana Pro (14 refs)</strong> → best for <strong>multi-character scenes</strong> (Mia + Nahla + Dr. Mariana in one frame), no training step, flexible. <strong>This is the right default for your series.</strong></li>
+<li><strong>LoRA on Flux</strong> → best for a <strong>single hero character</strong> you reuse constantly and want maximum fidelity on, where you don't need 3 people in one frame. Worth it for, say, a recurring brand mascot.</li>
+</ul>
+<p>For Bare La Terre (ensemble cast, many two/three-shots), <strong>the gallery approach is the primary path</strong>; LoRA is an optional booster for a hero character in solo shots.</p>
+<h3>Your LoRA bugs — diagnosis &amp; what I need</h3>
+<p>I read the LoRA pipeline. The training-completion parser already handles the common fal response shapes (<code>diffusers_lora_file</code>, <code>lora_file</code>, <code>lora_url</code>, <code>lora_weights_url</code>, Wan's <code>high/low_lora</code>) and mirrors the weights to R2, so the core is sound. The known failure points are:</p>
+<ol>
+<li><strong>"No LoRA URL in fal response"</strong> — fal completed but returned a shape the parser doesn't recognize. There's already an admin tool for exactly this: <strong><code>POST /admin/lora/inspect { admin_id, lora_id }</code></strong> dumps the raw fal response so we can see the real shape and patch the parser. <em>To fix a specific failure I need a failing <code>lora_id</code> run through that endpoint</em> (or the raw response).</li>
+<li><strong>Wrong training endpoint</strong> — a prior bug had Flux.2 pointed at a non-existent endpoint; the notes say it's corrected, but worth re-confirming on a fresh train.</li>
+<li><strong>LoRA isn't wired into Relay at all</strong> — even a good LoRA can't be used in a chain yet. If you want LoRA in the series pipeline, that's a build (apply a character's LoRA on its keyframe steps).</li>
+</ol>
+<p><strong>To move forward on LoRA:</strong> run one training to completion, and if it fails, send me the <code>lora_id</code> (I'll walk you through <code>/admin/lora/inspect</code>) — then I can patch the exact parser gap. Separately I can wire LoRA application into Relay's cast so a character with a trained LoRA uses it automatically.</p>
+<h2>Recommended builds (pick what you want)</h2>
+<ol>
+<li><strong>Relay: force high-ref keyframes + full gallery (highest leverage, low risk).</strong> When a shot casts a character, default its keyframe to Nano Banana Pro and request the full gallery fan-out. This alone should take you from "slight variations" to "locked." <em>Backwards-compatible.</em></li>
+<li><strong>Relay: per-character seed lock</strong> in the Voice/Cast system, so a character reproduces exactly across runs.</li>
+<li><strong>Character Sheet generator (Studio helper):</strong> one click spins N matching angle/expression variations of a hero image and saves them to the character's gallery — so building a sheet is minutes, not manual.</li>
+<li><strong>Wire LoRA into Relay:</strong> a cast character with a trained, ready LoRA applies it automatically on Flux keyframes (for hero/solo shots).</li>
+<li><strong>LoRA bug fix:</strong> diagnose a specific failing train via <code>/admin/lora/inspect</code> and patch the parser.</li>
+</ol>
+<p>My recommendation: do <strong>1 + 3</strong> now (they fix the consistency you actually felt and make character sheets fast), add <strong>2</strong> for reproducibility, and treat <strong>4 + 5</strong> as the LoRA track once you have a failing case to diagnose.</p>`
+  },
+
+  'relay-commercial': {
+    crumb:'Studio & Creative \u203a Relay Commercial Recipe',
+    body: `<p>A high-detail, abstract, premium loop you build <em>in Relay</em> — a self-promo for Relay itself. Brand palette: <strong>crimson #E0143C + electric cyan</strong> on deep black.</p>
+<p><strong>Start from the preset:</strong> clone <strong>"Still → Cinematic Video"</strong> (it's already image → animate). Then optionally add the Music + Voiceover steps for a full kit.</p>
+<h2>STEP 1 — Still (the key frame)</h2>
+<ul>
+<li><strong>Model:</strong> Nano Banana Pro (or Flux 2 Pro) — pick a high-detail image model</li>
+<li><strong>Quality:</strong> High · <strong>Aspect:</strong> 16:9</li>
+<li><strong>Prompt:</strong></li>
+</ul>
+<div class="callout scenario"><p>Abstract luxury commercial key visual: a continuous chain of glowing energy nodes connected by flowing ribbons of liquid light, weaving through a deep black studio void. Creative forms — light, motion streaks, sound waves — morph and pulse along the chain. Volumetric haze, floating bokeh particles, glossy reflections, fine intricate detail. Electric crimson red and bright cyan accents against pure black. Cinematic depth of field, premium 8k advertising aesthetic, elegant, futuristic, symmetrical balanced composition.</p></div>
+<h2>STEP 2 — Animate (the loop)</h2>
+<ul>
+<li><strong>Model:</strong> your strongest image-to-video (Kling / Seedance) · wired from Step 1</li>
+<li><strong>Motion preset:</strong> <strong>Slow orbit</strong> <em>(or Float &amp; hover / Turntable — cyclical moves loop best)</em></li>
+<li><strong>Aspect:</strong> 16:9 · <strong>Duration:</strong> ~5s</li>
+<li><strong>Prompt:</strong></li>
+</ul>
+<div class="callout scenario"><p>The ribbons of light flow and pulse continuously along the chain, energy traveling node to node in a smooth endless cycle, particles drifting weightlessly, a gentle continuous camera drift that returns to where it began. Seamless loop, slow elegant motion, no hard cuts.</p></div>
+<h2>STEP 3 — Music bed <em>(optional — add a step)</em></h2>
+<ul>
+<li><strong>Model:</strong> ElevenLabs Music (or Ace-Step)</li>
+<li><strong>Prompt:</strong></li>
+</ul>
+<div class="callout scenario"><p>Cinematic tech-brand underscore: deep pulsing sub-bass, shimmering synth arpeggios that build subtly, clean and premium, modern and confident, loopable, ~10 seconds.</p></div>
+<h2>STEP 4 — Voiceover / tagline <em>(optional — add a TTS step, set your cloned voice in the Cast lock)</em></h2>
+<ul>
+<li><strong>Model:</strong> a TTS voice · <strong>Cast lock → Voice:</strong> your cloned voice</li>
+<li><strong>Line to speak:</strong></li>
+</ul>
+<div class="callout scenario"><p>CPD Relay. One idea, chained into a finished scene — shots, voice, and sound, ready for the edit.</p></div>
+<h2>Run it</h2>
+<ol>
+<li>Fill the prompts above into the cloned preset (add Steps 3–4 with <strong>+ Add step</strong> if you want the full kit).</li>
+<li><strong>Run</strong> the chain → clips + audio land in your Vault.</li>
+<li><strong>Export Kit</strong> → you get the clip + audio stems + shot-list manifest + DaVinci EDL.</li>
+</ol>
+<h2>Make the loop seamless (editor)</h2>
+<ul>
+<li>Cyclical motion (orbit/float/turntable) loops far better than push-in.</li>
+<li>Batch <strong>×2–×4</strong> on Step 2 and keep the smoothest take.</li>
+<li>In Resolve/Premiere: crossfade the last ~0.5s into the first frame for a perfect seam.</li>
+<li><strong>Add the "CPD RELAY" wordmark in the editor</strong>, not in the generation — AI text is unreliable; a clean title on top looks far more premium.</li>
+</ul>
+<h2>Variations to try</h2>
+<ul>
+<li>Swap the palette line for <strong>"molten gold + obsidian"</strong> or <strong>"holographic iridescent"</strong> for alt brand cuts.</li>
+<li>Change Step 2 motion to <strong>Light sweep</strong> for a reveal feel, or <strong>Speed ramp</strong> for energy.</li>
+</ul>`
+  },
+
 
   // ═════ GETTING STARTED ═════
   'architecture': {
